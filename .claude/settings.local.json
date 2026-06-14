@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Recurse -Force \"C:\\\\PROJECTS\\\\amama lofts\\\\app\",\"C:\\\\PROJECTS\\\\amama lofts\\\\lib\",\"C:\\\\PROJECTS\\\\amama lofts\\\\public\" -ErrorAction SilentlyContinue | Where-Object { -not $_.PSIsContainer } | Select-Object FullName, Length)",
+      "Bash(npm run *)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(taskkill /PID 168008 /F)",
+      "PowerShell(taskkill /PID 168008 /F)",
+      "Bash(curl -s -L -A \"Mozilla/5.0 \\(Windows NT 10.0; Win64; x64\\) AppleWebKit/537.36 Chrome/120 Safari/537.36\" https://findrealestate.com/ -o ref_home.html)",
+      "Bash(grep -oE '\\(\\\\-\\\\-color-bg|\\\\-\\\\-color-text|\\\\-\\\\-color-accent|\\\\-\\\\-color-line|\\\\-\\\\-color-grey\\)[^;<\"]{0,30}' ref_home.html)",
+      "Bash(grep -oE '<style[^>]*>[^<]{0,200}' ref_home.html)",
+      "Bash(grep -oE '\\\\{[^{}]{0,60}--color-bg:[^}]*\\\\}' refcss/_all.css)",
+      "Bash(xargs echo \"white-ish:\")",
+      "Bash(xargs echo \"black-ish:\")",
+      "PowerShell($lines = Get-Content \"C:\\\\PROJECTS\\\\amama lofts\\\\app\\\\globals.css\"; \"total lines: $\\($lines.Count\\)\"; \"line452: [$\\($lines[451]\\)]\"; \"line453: [$\\($lines[452]\\)]\"; $lines[0..451] | Set-Content \"C:\\\\PROJECTS\\\\amama lofts\\\\app\\\\globals.head.css\" -Encoding utf8; \"head written: $\\(\\(Get-Content 'C:\\\\PROJECTS\\\\amama lofts\\\\app\\\\globals.head.css'\\).Count\\) lines\")"
+    ]
+  }
+}

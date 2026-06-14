@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-gold: #C5A880;
+  --color-brand-gold-dark: #B3956E;
+  --color-brand-gold-light: #E0CEB6;
+  --color-charcoal-dark: #121314;
+  --color-charcoal-body: #1C1E21;
+  --color-charcoal-muted: #565D65;
+  --color-neutral-sand: #E5DDD3;
+  --color-neutral-linen: #F4EFEB;
+  --color-neutral-ivory: #FDFCF7;
+  
+  --font-display: 'Outfit', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  
+  --animate-fade-in: fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-up: slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-scale-up: scale-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scale-up {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+}
+
+:root {
+  --background: #FDFCF7;
+  --foreground: #1C1E21;
+}
+
+body {
+  background-color: var(--color-neutral-ivory);
+  color: var(--color-charcoal-body);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--color-charcoal-dark);
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(253, 252, 247, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(197, 168, 128, 0.15);
+}
+
+.glass-dark {
+  background: rgba(18, 19, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(197, 168, 128, 0.1);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-neutral-ivory);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-sand);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-gold);
+}
