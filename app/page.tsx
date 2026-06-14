@@ -911,7 +911,7 @@ export default function HomePage() {
                       <div className="text-charcoal-body text-sm sm:text-base leading-relaxed mb-8 max-w-md bg-white border border-neutral-sand/20 rounded-2xl p-6 shadow-xs w-full text-center">
                         {assessment.result === 'likely_fit' && (
                           <p>
-                            Aloha {firstName}, your profile aligns with workforce housing guidelines. We've sent your document checklist by email. An advisor will contact you at <strong className="text-charcoal-dark">{phone}</strong> soon.
+                            Aloha {firstName}, your profile aligns with workforce housing guidelines. We&apos;ve sent your document checklist by email. An advisor will contact you at <strong className="text-charcoal-dark">{phone}</strong> soon.
                           </p>
                         )}
                         {assessment.result === 'needs_review' && (
@@ -1215,7 +1215,7 @@ export default function HomePage() {
                     </div>
                     
                     <p className="text-sm text-charcoal-muted leading-relaxed mb-6">
-                      AUW 2-1-1 is Hawaii's only comprehensive community helpline. Connect with local specialists to find emergency financial assistance, food services, rent support, utility help, and transitional shelter.
+                      AUW 2-1-1 is Hawaii&apos;s only comprehensive community helpline. Connect with local specialists to find emergency financial assistance, food services, rent support, utility help, and transitional shelter.
                     </p>
                   </div>
                 </div>
@@ -1336,54 +1336,59 @@ export default function HomePage() {
 
       {/* Location Map Section - Show only for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="location" className="relative py-32 animate-fade-in overflow-hidden border-t border-b border-neutral-sand/20">
-          {/* Background Image with Dark Overlay */}
-          <div className="absolute inset-0">
-            <Image
-              src="/images/Exterior-of-planned-765-Amana-Street-project.webp"
-              alt="Amana Lofts Location"
-              fill
-              className="object-cover object-center"
-            />
-            <div className="absolute inset-0 bg-charcoal-dark/85 backdrop-blur-[2px]" />
-          </div>
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left text */}
-            <div>
-              <div className="inline-flex p-3 bg-white/10 backdrop-blur-md rounded-2xl text-[#dcae76] mb-5 border border-white/10">
-                <MapPin className="w-6 h-6" />
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-display font-semibold text-white mb-6">
-                Everything Ala Moana Has to Offer
-              </h2>
-              <p className="text-neutral-sand/80 leading-relaxed mb-8 text-sm sm:text-base">
-                Located at 765 Amana Street, Amana Lofts places you at the center of Honolulu's most walkable and transit-friendly district. Walk to grocery stores, beaches, shopping center terminals, and primary employment zones.
-              </p>
-              <a
-                href="https://maps.google.com/?q=765+Amana+Street+Honolulu+HI+96814"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-xs rounded-xl tracking-wider uppercase transition-all focus:outline-none shadow-xs"
-              >
-                Open in Google Maps
-                <ArrowUpRight className="w-4 h-4" />
-              </a>
-            </div>
-
-            {/* Right glass cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {landmarks.map((lm, idx) => (
-                <div key={idx} className="flex justify-between items-center p-5 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl hover:bg-white/10 transition-colors group">
-                  <div>
-                    <span className="block font-semibold text-white text-sm">{lm.name}</span>
-                    <span className="block text-xs font-semibold text-[#dcae76] mt-0.5">{lm.distance}</span>
-                  </div>
-                  <span className="text-xs font-semibold text-white whitespace-nowrap bg-black/40 px-3 py-1.5 rounded-lg group-hover:bg-black/60 transition-colors">
-                    {lm.time}
-                  </span>
+        <section id="location" className="py-28 bg-[#faf8f5] animate-fade-in relative z-10 border-b border-neutral-sand/15">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              
+              {/* Left Column: Heading, description, maps button, and a large real image */}
+              <div className="lg:col-span-6 space-y-6">
+                <div className="inline-flex p-3 bg-[#cda26b]/10 rounded-2xl text-[#cda26b] border border-[#cda26b]/20">
+                  <MapPin className="w-6 h-6" />
                 </div>
-              ))}
+                <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark tracking-wide leading-tight">
+                  Everything Ala Moana Has to Offer
+                </h2>
+                <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
+                  Located at 765 Amana Street, Amana Lofts places you at the center of Honolulu&apos;s most walkable and transit-friendly district. Walk to grocery stores, beaches, shopping center terminals, and primary employment zones.
+                </p>
+                <div className="pt-2">
+                  <a
+                    href="https://maps.google.com/?q=765+Amana+Street+Honolulu+HI+96814"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-xs rounded-xl tracking-wider uppercase transition-all focus:outline-none shadow-xs"
+                  >
+                    Open in Google Maps
+                    <ArrowUpRight className="w-4 h-4" />
+                  </a>
+                </div>
+                
+                {/* Visual Image */}
+                <div className="relative w-full h-[240px] rounded-[20px] overflow-hidden shadow-md border border-neutral-sand/20 mt-6">
+                  <Image 
+                    src="/images/sky_ala_moana.png" 
+                    alt="Ala Moana Neighborhood View" 
+                    fill 
+                    className="object-cover" 
+                  />
+                </div>
+              </div>
+
+              {/* Right Column: Clean Grid of Landmarks */}
+              <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {landmarks.map((lm, idx) => (
+                  <div key={idx} className="flex justify-between items-center p-4 bg-[#f5f0eb] border border-neutral-sand/20 rounded-2xl hover:bg-white hover:border-[#dcae76]/60 transition-all duration-300 group shadow-2xs">
+                    <div>
+                      <span className="block font-semibold text-charcoal-dark text-sm">{lm.name}</span>
+                      <span className="block text-xs font-semibold text-[#cda26b] mt-0.5">{lm.distance}</span>
+                    </div>
+                    <span className="text-xs font-semibold text-charcoal-dark whitespace-nowrap bg-white border border-neutral-sand/30 px-3 py-1.5 rounded-lg group-hover:bg-[#dcae76] group-hover:text-[#1c1a17] transition-all duration-300">
+                      {lm.time}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
             </div>
           </div>
         </section>
@@ -1391,36 +1396,54 @@ export default function HomePage() {
 
       {/* How It Works Section - Show for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="how-it-works" className="py-24 bg-[#1c1a17] text-white animate-fade-in relative">
-          <div className="absolute inset-0 bg-[url('/images/smoke.png')] opacity-[0.03] mix-blend-screen pointer-events-none" />
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-            <div className="text-center mb-20">
-              <h2 className="text-3xl sm:text-4xl font-display font-semibold mb-4 text-[#dcae76]">
-                How the Leasing Process Works
-              </h2>
-              <p className="text-neutral-sand/85 max-w-xl mx-auto">
-                Amana Lofts follows a structured municipal compliance workflow to ensure fair and accurate placement.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                { step: "01", title: "Verify Sizing & Income", desc: "Check if your estimated annual gross income matches the 2026 80% AMI thresholds." },
-                { step: "02", title: "Join Launch List", desc: "Keep updated on project benchmarks, construction progress, and application packets." },
-                { step: "03", title: "Prepare Documents", desc: "Collect paystubs, tax files, and bank records ahead of time to ensure quick review." },
-                { step: "04", title: "Submit Application", desc: "Complete and submit the formal application package immediately once registrations open." },
-                { step: "05", title: "Compliance Review", desc: "Leasing managers conduct a full verification check of your assets, household size, and income." },
-                { step: "06", title: "Final Placement", desc: "Approved households review lease terms, secure parking spots, and sign their agreements." }
-              ].map((item, idx) => (
-                <div key={idx} className="group p-8 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 shadow-xl">
-                  <span className="text-4xl font-serif font-light text-[#dcae76]/40 mb-6 block group-hover:text-[#dcae76]/60 transition-colors">
-                    {item.step}
-                  </span>
-                  <h3 className="text-lg font-semibold mb-3 text-white">{item.title}</h3>
-                  <p className="text-sm text-neutral-sand/85 leading-relaxed group-hover:text-neutral-sand/95 transition-colors">{item.desc}</p>
+        <section id="how-it-works" className="py-28 bg-[#f4f0ea] animate-fade-in relative z-10 border-b border-neutral-sand/15">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+              
+              {/* Left Column: Title and Large Interior Photo */}
+              <div className="lg:col-span-5 space-y-6">
+                <span className="text-xs font-semibold text-[#cda26b] uppercase tracking-widest block">Leasing Steps</span>
+                <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark tracking-wide leading-tight">
+                  How the Leasing Process Works
+                </h2>
+                <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
+                  Amana Lofts follows a structured municipal compliance workflow to ensure fair and accurate placement. Follow this guide to prepare your profile.
+                </p>
+                
+                {/* Large Interior Image */}
+                <div className="relative w-full aspect-[4/3] rounded-[24px] overflow-hidden shadow-lg border border-neutral-sand/20">
+                  <Image
+                    src="/images/3.jpg"
+                    alt="Amana Lofts Modern Living Interior"
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-              ))}
+              </div>
+
+              {/* Right Column: Clean Vertical Timeline */}
+              <div className="lg:col-span-7 space-y-8">
+                {[
+                  { step: "01", title: "Verify Sizing & Income", desc: "Check if your estimated annual gross income matches the 2026 80% AMI thresholds." },
+                  { step: "02", title: "Join Launch List", desc: "Keep updated on project benchmarks, construction progress, and application packets." },
+                  { step: "03", title: "Prepare Documents", desc: "Collect paystubs, tax files, and bank records ahead of time to ensure quick review." },
+                  { step: "04", title: "Submit Application", desc: "Complete and submit the formal application package immediately once registrations open." },
+                  { step: "05", title: "Compliance Review", desc: "Leasing managers conduct a full verification check of your assets, household size, and income." },
+                  { step: "06", title: "Final Placement", desc: "Approved households review lease terms, secure parking spots, and sign their agreements." }
+                ].map((item, idx) => (
+                  <div key={idx} className="flex gap-4 items-start">
+                    {/* Circle badge */}
+                    <div className="w-10 h-10 rounded-full bg-[#dcae76]/10 border border-[#dcae76]/20 text-[#cda26b] flex items-center justify-center font-serif text-sm font-semibold flex-shrink-0">
+                      {item.step}
+                    </div>
+                    <div>
+                      <h3 className="text-base font-semibold text-charcoal-dark mb-1">{item.title}</h3>
+                      <p className="text-xs sm:text-sm text-charcoal-muted leading-relaxed">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
             </div>
           </div>
         </section>
@@ -1428,55 +1451,59 @@ export default function HomePage() {
 
       {/* Document Checklist Section - Show for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="checklist" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center bg-[#1c1a17] text-white rounded-[32px] overflow-hidden shadow-2xl relative">
-            <div className="absolute inset-0 bg-[url('/images/cloud.png')] opacity-10 bg-cover bg-center pointer-events-none" />
-            
-            <div className="lg:col-span-5 order-2 lg:order-1 relative h-[500px] sm:h-[650px] w-full border-r border-white/10">
-              <Image
-                src="/images/amana-lofts-groundbreaking-053025.webp"
-                alt="Amana Lofts construction updates and groundbreaking"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 45vw"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-            </div>
+        <section id="checklist" className="py-28 bg-[#faf8f5] animate-fade-in relative z-10 border-b border-neutral-sand/15">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center bg-white border border-neutral-sand/25 rounded-[32px] overflow-hidden shadow-xl relative">
+              
+              {/* Left Column: Construction/Groundbreaking Image */}
+              <div className="lg:col-span-5 relative h-[450px] lg:h-[600px] w-full">
+                <Image
+                  src="/images/amana-lofts-groundbreaking-053025.webp"
+                  alt="Amana Lofts construction updates and groundbreaking"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal-dark/10 to-transparent" />
+              </div>
 
-            <div className="lg:col-span-7 order-1 lg:order-2 z-10 relative p-8 sm:p-12 lg:pl-0 lg:pr-16">
-              <h2 className="text-3xl sm:text-4xl font-display font-semibold mb-6 text-white">
-                Required Verification Documents
-              </h2>
-              <p className="text-neutral-sand/70 leading-relaxed mb-10 text-sm sm:text-base max-w-xl">
-                Under City and County of Honolulu regulations, all household income variables must be fully certified. We recommend organizing these four key items beforehand to expedite your compliance review.
-              </p>
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
-                {[
-                  { title: "1. Photo Identification", desc: "Government-issued photo IDs for all adult household members.", icon: Shield },
-                  { title: "2. Paystubs", desc: "2–3 months of recent consecutive paystubs for all active employment.", icon: Coins },
-                  { title: "3. Bank Statements", desc: "2 months of complete statements for all checking and savings accounts.", icon: FileText },
-                  { title: "4. Tax Filings", desc: "Most recent year federal returns (all schedules) and W-2/1099 forms.", icon: FileCheck },
-                ].map((doc, idx) => {
-                  const Icon = doc.icon;
-                  return (
-                    <div key={idx} className="p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl hover:bg-white/10 transition-colors flex items-start gap-4">
-                      <div className="p-3 bg-[#dcae76]/10 text-[#dcae76] rounded-xl flex-shrink-0">
-                        <Icon className="w-5 h-5" />
+              {/* Right Column: Light Document Checklist */}
+              <div className="lg:col-span-7 p-8 sm:p-12 lg:pr-12">
+                <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark mb-4 leading-tight">
+                  Required Verification Documents
+                </h2>
+                <p className="text-charcoal-muted leading-relaxed mb-8 text-sm sm:text-base max-w-xl">
+                  Under City and County of Honolulu regulations, all household income variables must be fully certified. We recommend organizing these four key items beforehand to expedite your compliance review.
+                </p>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                  {[
+                    { title: "1. Photo Identification", desc: "Government-issued photo IDs for all adult household members.", icon: Shield },
+                    { title: "2. Paystubs", desc: "2–3 months of recent consecutive paystubs for all active employment.", icon: Coins },
+                    { title: "3. Bank Statements", desc: "2 months of complete statements for all checking and savings accounts.", icon: FileText },
+                    { title: "4. Tax Filings", desc: "Most recent year federal returns (all schedules) and W-2/1099 forms.", icon: FileCheck },
+                  ].map((doc, idx) => {
+                    const Icon = doc.icon;
+                    return (
+                      <div key={idx} className="p-5 bg-[#f5f0eb] border border-neutral-sand/15 rounded-2xl hover:bg-neutral-linen/20 hover:border-[#dcae76]/50 transition-all duration-300 flex items-start gap-4">
+                        <div className="p-2.5 bg-[#dcae76]/20 text-[#cda26b] rounded-xl flex-shrink-0">
+                          <Icon className="w-5 h-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-charcoal-dark text-sm mb-1">{doc.title}</h4>
+                          <p className="text-xs text-charcoal-muted leading-relaxed">{doc.desc}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-white text-sm mb-1.5">{doc.title}</h4>
-                        <p className="text-xs text-neutral-sand/80 leading-relaxed">{doc.desc}</p>
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+                
+                <div className="inline-flex items-center gap-3 bg-[#dcae76]/10 border border-[#dcae76]/20 rounded-xl px-5 py-3.5">
+                  <CheckCircle2 className="w-4 h-4 text-[#cda26b] flex-shrink-0" />
+                  <span className="text-xs font-semibold text-charcoal-dark uppercase tracking-wider">A full compliance checklist has been sent to your email.</span>
+                </div>
               </div>
-              
-              <div className="inline-flex items-center gap-3 bg-[#dcae76]/10 border border-[#dcae76]/20 rounded-xl px-5 py-4">
-                <CheckCircle2 className="w-5 h-5 text-[#dcae76] flex-shrink-0" />
-                <span className="text-xs font-semibold text-[#dcae76] uppercase tracking-wider">A full compliance checklist has been sent to your email.</span>
-              </div>
+
             </div>
           </div>
         </section>
@@ -1484,39 +1511,56 @@ export default function HomePage() {
 
       {/* FAQ Section - Show only for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="faq" className="py-24 bg-neutral-linen/20 border-t border-b border-neutral-sand/15 animate-fade-in relative overflow-hidden">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-display font-semibold mb-4 text-charcoal-dark">
-                Frequently Asked Questions
-              </h2>
-              <p className="text-charcoal-muted">
-                Find detailed explanations regarding Amana Lofts leasing parameters, timing, and qualifications.
-              </p>
-            </div>
+        <section id="faq" className="py-28 bg-[#f4f0ea] animate-fade-in relative z-10 border-b border-neutral-sand/15">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+              
+              {/* Left Column: Heading and Large Building Rendering */}
+              <div className="lg:col-span-5 lg:sticky lg:top-8 space-y-6">
+                <span className="text-xs font-semibold text-[#cda26b] uppercase tracking-widest block">Learn More</span>
+                <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark tracking-wide leading-tight">
+                  Frequently Asked Questions
+                </h2>
+                <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
+                  Find detailed explanations regarding Amana Lofts leasing parameters, timing, and qualifications.
+                </p>
+                
+                {/* Large Exterior Rendering */}
+                <div className="relative w-full aspect-[4/3] rounded-[24px] overflow-hidden shadow-lg border border-neutral-sand/20">
+                  <Image
+                    src="/images/Exterior-of-planned-765-Amana-Street-project.webp"
+                    alt="Amana Lofts Planned Building Exterior Rendering"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
 
-            <div className="space-y-4">
-              {faqData.map((faq, idx) => {
-                const isOpen = openFaq === idx;
-                return (
-                  <div key={idx} className="bg-white border border-neutral-sand/20 rounded-2xl overflow-hidden shadow-sm transition-all duration-300">
-                    <button
-                      onClick={() => toggleFaq(idx)}
-                      className="w-full flex items-center justify-between p-6 text-left focus:outline-none hover:bg-neutral-ivory/30 transition-colors"
-                    >
-                      <span className="font-semibold text-charcoal-dark text-base sm:text-lg pr-4">{faq.q}</span>
-                      <span className={`p-2 rounded-full transition-colors ${isOpen ? 'bg-[#dcae76]/20 text-[#cda26b]' : 'bg-neutral-linen/80 text-charcoal-muted'}`}>
-                        {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-                      </span>
-                    </button>
-                    {isOpen && (
-                      <div className="px-6 pb-6 pt-2 text-sm text-charcoal-muted leading-relaxed">
-                        {faq.a}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {/* Right Column: Accordion Toggles */}
+              <div className="lg:col-span-7 space-y-4">
+                {faqData.map((faq, idx) => {
+                  const isOpen = openFaq === idx;
+                  return (
+                    <div key={idx} className="bg-white border border-neutral-sand/20 rounded-2xl overflow-hidden shadow-2xs transition-all duration-300">
+                      <button
+                        onClick={() => toggleFaq(idx)}
+                        className="w-full flex items-center justify-between p-5 text-left focus:outline-none hover:bg-neutral-linen/10 transition-colors"
+                      >
+                        <span className="font-semibold text-charcoal-dark text-sm sm:text-base pr-4">{faq.q}</span>
+                        <span className={`p-1.5 rounded-full transition-colors flex-shrink-0 ${isOpen ? 'bg-[#dcae76]/20 text-[#cda26b]' : 'bg-[#f5f0eb] text-charcoal-muted'}`}>
+                          {isOpen ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                        </span>
+                      </button>
+                      {isOpen && (
+                        <div className="px-5 pb-5 pt-1.5 text-xs sm:text-sm text-charcoal-muted border-t border-neutral-sand/10 leading-relaxed bg-[#fdfcfb]">
+                          {faq.a}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
             </div>
           </div>
         </section>
@@ -1524,68 +1568,70 @@ export default function HomePage() {
 
       {/* Launch Updates Capture Section - Show for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && !wantsUpdates && (
-        <section id="join-updates" className="py-24 bg-[#1c1a17] text-white text-center animate-fade-in relative">
+        <section id="join-updates" className="py-28 bg-[#faf8f5] text-center animate-fade-in relative z-10 border-b border-neutral-sand/15">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
-            <div className="inline-flex p-3 bg-[#dcae76]/10 rounded-2xl text-[#dcae76] mb-6 border border-[#dcae76]/20 shadow-lg">
-              <Bookmark className="w-6 h-6" />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-display font-semibold mb-4 text-white">
-              Join Amana Lofts Launch List
-            </h2>
-            <p className="text-neutral-sand/85 max-w-lg mx-auto mb-10 text-sm sm:text-base leading-relaxed">
-              Sign up to receive development updates, municipal assessment timelines, and leasing instructions directly in your inbox.
-            </p>
-
-            {updatesStatus === 'success' ? (
-              <div className="max-w-md mx-auto p-8 bg-green-900/20 border border-green-500/30 rounded-2xl backdrop-blur-sm">
-                <Check className="w-10 h-10 text-green-400 mx-auto mb-4" />
-                <h3 className="font-semibold text-green-300 text-lg mb-2">You're on the list!</h3>
-                <p className="text-sm text-green-400/80">
-                  Thank you for signing up. We will notify you when applications open or new guidelines are released.
-                </p>
+            <div className="bg-white border border-neutral-sand/25 rounded-[32px] p-8 sm:p-12 shadow-lg">
+              <div className="inline-flex p-3 bg-[#dcae76]/10 rounded-2xl text-[#cda26b] mb-6 border border-[#dcae76]/20 shadow-xs">
+                <Bookmark className="w-5 h-5" />
               </div>
-            ) : (
-              <form onSubmit={handleUpdatesSubmit} className="max-w-lg mx-auto flex flex-col gap-4">
-                {updatesStatus === 'error' && (
-                  <p className="text-sm text-red-400 bg-red-900/20 p-4 rounded-xl border border-red-500/30 mb-2">
-                    Failed to sign up. Please check your inputs or try again.
+              <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark mb-4 leading-tight">
+                Join Amana Lofts Launch List
+              </h2>
+              <p className="text-charcoal-muted max-w-lg mx-auto mb-8 text-sm sm:text-base leading-relaxed">
+                Sign up to receive development updates, municipal assessment timelines, and leasing instructions directly in your inbox.
+              </p>
+
+              {updatesStatus === 'success' ? (
+                <div className="max-w-md mx-auto p-8 bg-green-50/10 border border-green-500/20 rounded-2xl">
+                  <Check className="w-8 h-8 text-green-600 mx-auto mb-4" />
+                  <h3 className="font-semibold text-green-800 text-lg mb-2">You&apos;re on the list!</h3>
+                  <p className="text-xs sm:text-sm text-green-700/80">
+                    Thank you for signing up. We will notify you when applications open or new guidelines are released.
                   </p>
-                )}
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    required
-                    placeholder="Your Name"
-                    value={updatesName}
-                    onChange={(e) => setUpdatesName(e.target.value)}
-                    disabled={updatesStatus === 'loading'}
-                    className="w-full px-5 py-4 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/50 focus:border-[#dcae76] text-sm bg-white/5 text-white placeholder:text-white/60 transition-all"
-                  />
-                  <input
-                    type="email"
-                    required
-                    placeholder="Email Address"
-                    value={updatesEmail}
-                    onChange={(e) => setUpdatesEmail(e.target.value)}
-                    disabled={updatesStatus === 'loading'}
-                    className="w-full px-5 py-4 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/50 focus:border-[#dcae76] text-sm bg-white/5 text-white placeholder:text-white/60 transition-all"
-                  />
                 </div>
-                
-                <button
-                  type="submit"
-                  disabled={updatesStatus === 'loading'}
-                  className="w-full px-8 py-4 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] rounded-xl text-sm font-semibold tracking-wider uppercase transition-all shadow-lg focus:outline-none self-center mt-2"
-                >
-                  {updatesStatus === 'loading' ? 'Joining...' : 'Subscribe to Updates'}
-                </button>
-                
-                <p className="text-xs text-neutral-sand/65 leading-relaxed mt-4 max-w-md mx-auto">
-                  By joining, you agree to receive project emails. We value privacy and never share credentials. You can unsubscribe at any time.
-                </p>
-              </form>
-            )}
+              ) : (
+                <form onSubmit={handleUpdatesSubmit} className="max-w-lg mx-auto flex flex-col gap-4">
+                  {updatesStatus === 'error' && (
+                    <p className="text-sm text-red-600 bg-red-50 p-4 rounded-xl border border-red-500/20 mb-2">
+                      Failed to sign up. Please check your inputs or try again.
+                    </p>
+                  )}
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      required
+                      placeholder="Your Name"
+                      value={updatesName}
+                      onChange={(e) => setUpdatesName(e.target.value)}
+                      disabled={updatesStatus === 'loading'}
+                      className="w-full px-5 py-3.5 border border-neutral-sand/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/30 focus:border-[#dcae76] text-sm bg-white text-charcoal-dark placeholder:text-charcoal-muted/50 transition-all"
+                    />
+                    <input
+                      type="email"
+                      required
+                      placeholder="Email Address"
+                      value={updatesEmail}
+                      onChange={(e) => setUpdatesEmail(e.target.value)}
+                      disabled={updatesStatus === 'loading'}
+                      className="w-full px-5 py-3.5 border border-neutral-sand/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/30 focus:border-[#dcae76] text-sm bg-white text-charcoal-dark placeholder:text-charcoal-muted/50 transition-all"
+                    />
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    disabled={updatesStatus === 'loading'}
+                    className="w-full px-8 py-3.5 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] rounded-xl text-sm font-semibold tracking-wider uppercase transition-all shadow-md focus:outline-none self-center mt-2"
+                  >
+                    {updatesStatus === 'loading' ? 'Joining...' : 'Subscribe to Updates'}
+                  </button>
+                  
+                  <p className="text-xs text-charcoal-muted leading-relaxed mt-4 max-w-md mx-auto">
+                    By joining, you agree to receive project emails. We value privacy and never share credentials. You can unsubscribe at any time.
+                  </p>
+                </form>
+              )}
+            </div>
           </div>
         </section>
       )}
