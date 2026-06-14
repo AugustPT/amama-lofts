@@ -734,35 +734,39 @@ export default function ScreenerPage() {
               </div>
 
               {/* One Click Transfer Card */}
-              <div className="w-full p-6 rounded-2xl border border-[#dcae76]/25 bg-[#dcae76]/5 text-center mb-6 shadow-xs">
-                <div className="flex flex-col items-center gap-3">
-                  <FileCheck className="w-6 h-6 text-brand-gold" />
-                  <div>
-                    <h4 className="font-semibold text-charcoal-dark text-sm uppercase tracking-wider mb-1">
-                      One-Click Profile Transfer
-                    </h4>
-                    <p className="text-xs text-charcoal-muted leading-normal max-w-sm mx-auto mb-4">
-                      Match with premium partner properties (like Sky Ala Moana) instantly without re-applying.
-                    </p>
-                    
-                    {transferAuthorized ? (
-                      <div className="text-xs text-green-700 font-bold bg-green-50 border border-green-200 rounded-lg py-2 px-4 flex items-center justify-center gap-1.5 animate-fade-in">
-                        <CheckCircle2 className="w-4 h-4" />
-                        Portfolio Match Enabled!
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={handleTransferAuthorize}
-                        disabled={transferLoading}
-                        className="px-6 py-3.5 bg-brand-gold hover:bg-brand-gold-dark active:scale-[0.98] text-white font-semibold text-xs rounded-xl tracking-wider transition-all focus:outline-none shadow-xs"
-                      >
-                        {transferLoading ? 'Enabling...' : 'Enable Portfolio Match'}
-                      </button>
-                    )}
+              {(assessment.result === 'outside_range' || moveTiming === 'immediate') && (
+                <div className="w-full p-6 rounded-2xl border border-[#dcae76]/25 bg-[#dcae76]/5 text-center mb-6 shadow-xs">
+                  <div className="flex flex-col items-center gap-3">
+                    <FileCheck className="w-6 h-6 text-brand-gold" />
+                    <div>
+                      <h4 className="font-semibold text-charcoal-dark text-sm uppercase tracking-wider mb-1">
+                        {assessment.result === 'outside_range' ? 'One-Click Premium Transfer' : 'Immediate Placement Transfer'}
+                      </h4>
+                      <p className="text-xs text-charcoal-muted leading-normal max-w-sm mx-auto mb-4">
+                        {assessment.result === 'outside_range' 
+                          ? 'Match with premium partner properties (like Sky Ala Moana) instantly without re-applying.'
+                          : 'Match with partner workforce properties that have immediate vacancies instantly without re-applying.'}
+                      </p>
+                      
+                      {transferAuthorized ? (
+                        <div className="text-xs text-green-700 font-bold bg-green-50 border border-green-200 rounded-lg py-2 px-4 flex items-center justify-center gap-1.5 animate-fade-in">
+                          <CheckCircle2 className="w-4 h-4" />
+                          Portfolio Match Enabled!
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={handleTransferAuthorize}
+                          disabled={transferLoading}
+                          className="px-6 py-3.5 bg-brand-gold hover:bg-brand-gold-dark active:scale-[0.98] text-white font-semibold text-xs rounded-xl tracking-wider transition-all focus:outline-none shadow-xs"
+                        >
+                          {transferLoading ? 'Enabling...' : 'Enable Portfolio Match'}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Footer controls for step 6 */}
               <div className="w-full flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 pt-5 border-t border-neutral-sand/25">
@@ -959,25 +963,25 @@ export default function ScreenerPage() {
                       
                       <div className="p-8">
                         <div className="flex justify-between items-start mb-4">
-                          <h3 className="text-2xl font-display font-semibold text-charcoal-dark">Honolulu County Section 8</h3>
+                          <h3 className="text-2xl font-display font-semibold text-charcoal-dark">Hawaii Public Housing Authority</h3>
                           <span className="px-2.5 py-1 text-[10px] font-semibold bg-green-50 text-green-700 border border-green-200 rounded-full uppercase">
-                            Government Subsidy
+                            Active Subsidies
                           </span>
                         </div>
                         <p className="text-sm text-charcoal-muted leading-relaxed mb-6">
-                          The Housing Choice Voucher program assists extremely low-income families, elderly, and disabled individuals. Vouchers are applied directly toward rent to make housing affordable in the private market.
+                          Instead of waiting on closed county lists, the HPHA frequently updates open waitlists for Low-Income Housing Tax Credit (LIHTC) properties and active state subsidized vacancies across Honolulu.
                         </p>
                       </div>
                     </div>
 
                     <div className="px-8 pb-8">
                       <a
-                        href="https://www.honolulu.gov/dcs/housing.html"
+                        href="https://www.hpha.hawaii.gov/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="w-full block text-center py-3.5 bg-neutral-ivory hover:bg-[#dcae76] hover:text-[#1c1a17] border border-neutral-sand text-charcoal-body text-sm font-semibold rounded-xl transition-all focus:outline-none"
                       >
-                        Visit County Housing Office &rarr;
+                        View Active State Waitlists &rarr;
                       </a>
                     </div>
                   </div>
