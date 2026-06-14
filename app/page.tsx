@@ -1336,40 +1336,50 @@ export default function HomePage() {
 
       {/* Location Map Section - Show only for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="location" className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center animate-fade-in">
-          <div className="lg:col-span-5">
-            <div className="inline-flex p-3 bg-brand-gold/10 rounded-sm text-brand-gold mb-5">
-              <MapPin className="w-6 h-6" />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-display font-semibold text-charcoal-dark mb-4">
-              Everything Ala Moana Has to Offer
-            </h2>
-            <p className="text-charcoal-muted leading-relaxed mb-6">
-              Located at 765 Amana Street, Amana Lofts places you at the center of Honolulu's most walkable and transit-friendly district. Walk to grocery stores, beaches, shopping center terminals, and primary employment zones.
-            </p>
-            <a
-              href="https://maps.google.com/?q=765+Amana+Street+Honolulu+HI+96814"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-bold text-brand-gold hover:text-brand-gold-dark transition-colors focus:outline-none"
-            >
-              Open in Google Maps
-              <ArrowUpRight className="w-4 h-4" />
-            </a>
+        <section id="location" className="relative py-32 animate-fade-in overflow-hidden border-t border-b border-neutral-sand/20">
+          {/* Background Image with Dark Overlay */}
+          <div className="absolute inset-0">
+            <Image
+              src="/images/Exterior-of-planned-765-Amana-Street-project.webp"
+              alt="Amana Lofts Location"
+              fill
+              className="object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-charcoal-dark/85 backdrop-blur-[2px]" />
           </div>
 
-          <div className="lg:col-span-7 bg-white p-6 sm:p-8 border border-neutral-sand/25 shadow-md rounded-sm">
-            <h3 className="text-sm font-semibold text-charcoal-dark uppercase tracking-wider mb-6 pb-2 border-b border-neutral-sand/15">
-              Proximity & Walk Times
-            </h3>
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            {/* Left text */}
+            <div>
+              <div className="inline-flex p-3 bg-white/10 backdrop-blur-md rounded-2xl text-[#dcae76] mb-5 border border-white/10">
+                <MapPin className="w-6 h-6" />
+              </div>
+              <h2 className="text-3xl sm:text-4xl font-display font-semibold text-white mb-6">
+                Everything Ala Moana Has to Offer
+              </h2>
+              <p className="text-neutral-sand/80 leading-relaxed mb-8 text-sm sm:text-base">
+                Located at 765 Amana Street, Amana Lofts places you at the center of Honolulu's most walkable and transit-friendly district. Walk to grocery stores, beaches, shopping center terminals, and primary employment zones.
+              </p>
+              <a
+                href="https://maps.google.com/?q=765+Amana+Street+Honolulu+HI+96814"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-xs rounded-xl tracking-wider uppercase transition-all focus:outline-none shadow-xs"
+              >
+                Open in Google Maps
+                <ArrowUpRight className="w-4 h-4" />
+              </a>
+            </div>
+
+            {/* Right glass cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {landmarks.map((lm, idx) => (
-                <div key={idx} className="flex justify-between items-center p-3.5 bg-neutral-linen/25 rounded-sm">
+                <div key={idx} className="flex justify-between items-center p-5 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl hover:bg-white/10 transition-colors group">
                   <div>
-                    <span className="block font-semibold text-charcoal-dark text-sm">{lm.name}</span>
-                    <span className="block text-[11px] text-charcoal-muted mt-0.5">{lm.distance}</span>
+                    <span className="block font-semibold text-white text-sm">{lm.name}</span>
+                    <span className="block text-[11px] text-[#dcae76] mt-0.5">{lm.distance}</span>
                   </div>
-                  <span className="text-xs font-semibold text-brand-gold whitespace-nowrap">
+                  <span className="text-xs font-semibold text-white whitespace-nowrap bg-black/40 px-3 py-1.5 rounded-lg group-hover:bg-black/60 transition-colors">
                     {lm.time}
                   </span>
                 </div>
@@ -1381,103 +1391,103 @@ export default function HomePage() {
 
       {/* How It Works Section - Show for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="how-it-works" className="py-20 sm:py-28 bg-neutral-linen/30 border-t border-b border-neutral-sand/20 animate-fade-in">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            
-            <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-display font-semibold text-charcoal-dark mb-4">
+        <section id="how-it-works" className="py-24 bg-[#1c1a17] text-white animate-fade-in relative">
+          <div className="absolute inset-0 bg-[url('/images/smoke.png')] opacity-[0.03] mix-blend-screen pointer-events-none" />
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+            <div className="text-center mb-20">
+              <h2 className="text-3xl sm:text-4xl font-display font-semibold mb-4 text-[#dcae76]">
                 How the Leasing Process Works
               </h2>
-              <p className="text-charcoal-muted max-w-xl mx-auto">
+              <p className="text-neutral-sand/60 max-w-xl mx-auto">
                 Amana Lofts follows a structured municipal compliance workflow to ensure fair and accurate placement.
               </p>
             </div>
 
-            <div className="relative border-l border-brand-gold/30 ml-4 sm:ml-6 space-y-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { step: "1", title: "Verify Household Sizing & Income Range", desc: "Check if your estimated annual gross income matches the 2026 80% AMI thresholds using our online screening tool." },
-                { step: "2", title: "Join Launch Updates List", desc: "Keep updated on project benchmarks, construction progress, and release date announcements for application packets." },
-                { step: "3", title: "Prepare Required Verification Documents", desc: "Collect paystubs, tax files, and bank records ahead of time to ensure quick compliance review." },
-                { step: "4", title: "Submit Formal Rental Application", desc: "Complete and submit the formal application package immediately once registrations officially open." },
-                { step: "5", title: "Compliance Eligibility Review", desc: "Leasing managers conduct a full verification check of your assets, household size, and income." },
-                { step: "6", title: "Approved Applicant Placements", desc: "Approved households review lease terms, secure parking spots, and sign their rental agreements." }
+                { step: "01", title: "Verify Sizing & Income", desc: "Check if your estimated annual gross income matches the 2026 80% AMI thresholds." },
+                { step: "02", title: "Join Launch List", desc: "Keep updated on project benchmarks, construction progress, and application packets." },
+                { step: "03", title: "Prepare Documents", desc: "Collect paystubs, tax files, and bank records ahead of time to ensure quick review." },
+                { step: "04", title: "Submit Application", desc: "Complete and submit the formal application package immediately once registrations open." },
+                { step: "05", title: "Compliance Review", desc: "Leasing managers conduct a full verification check of your assets, household size, and income." },
+                { step: "06", title: "Final Placement", desc: "Approved households review lease terms, secure parking spots, and sign their agreements." }
               ].map((item, idx) => (
-                <div key={idx} className="relative pl-10 sm:pl-12">
-                  <span className="absolute -left-[18px] top-0.5 flex items-center justify-center w-9 h-9 bg-brand-gold text-white font-display font-bold text-sm rounded-full ring-4 ring-neutral-ivory">
+                <div key={idx} className="group p-8 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 transition-all duration-300 shadow-xl">
+                  <span className="text-4xl font-serif font-light text-[#dcae76]/40 mb-6 block group-hover:text-[#dcae76]/60 transition-colors">
                     {item.step}
                   </span>
-                  <h3 className="text-lg font-semibold text-charcoal-dark mb-2">{item.title}</h3>
-                  <p className="text-sm text-charcoal-muted leading-relaxed">{item.desc}</p>
+                  <h3 className="text-lg font-semibold mb-3 text-white">{item.title}</h3>
+                  <p className="text-sm text-neutral-sand/60 leading-relaxed group-hover:text-neutral-sand/80 transition-colors">{item.desc}</p>
                 </div>
               ))}
             </div>
-
           </div>
         </section>
       )}
 
       {/* Document Checklist Section - Show for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="checklist" className="py-20 sm:py-28 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center animate-fade-in">
-          <div className="lg:col-span-5 order-2 lg:order-1 relative h-[350px] sm:h-[450px] w-full rounded-[24px] overflow-hidden border border-neutral-sand/20 shadow-lg">
-            <Image
-              src="/images/amana-lofts-groundbreaking-053025.webp"
-              alt="Amana Lofts construction updates and groundbreaking"
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 45vw"
-            />
-          </div>
+        <section id="checklist" className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center bg-[#1c1a17] text-white rounded-[32px] overflow-hidden shadow-2xl relative">
+            <div className="absolute inset-0 bg-[url('/images/cloud.png')] opacity-10 bg-cover bg-center pointer-events-none" />
+            
+            <div className="lg:col-span-5 order-2 lg:order-1 relative h-[500px] sm:h-[650px] w-full border-r border-white/10">
+              <Image
+                src="/images/amana-lofts-groundbreaking-053025.webp"
+                alt="Amana Lofts construction updates and groundbreaking"
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 100vw, 45vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+            </div>
 
-          <div className="lg:col-span-7 order-1 lg:order-2">
-            <div className="inline-flex p-3 bg-brand-gold/10 rounded-xl text-brand-gold mb-5">
-              <ClipboardList className="w-6 h-6" />
-            </div>
-            <h2 className="text-3xl sm:text-4xl font-display font-semibold text-charcoal-dark mb-4">
-              Required Verification Documents
-            </h2>
-            <p className="text-charcoal-muted leading-relaxed mb-8 text-sm sm:text-base">
-              Under City and County of Honolulu regulations, all household income variables must be fully certified. We recommend organizing these four key items beforehand to expedite your compliance review.
-            </p>
-            
-            {/* Visual 2x2 Checklist Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-              {[
-                { title: "1. Photo Identification", desc: "Government-issued photo IDs for all adult household members.", icon: Shield },
-                { title: "2. Paystubs", desc: "2–3 months of recent consecutive paystubs for all active employment.", icon: Coins },
-                { title: "3. Bank Statements", desc: "2 months of complete statements for all checking and savings accounts.", icon: FileText },
-                { title: "4. Tax Filings", desc: "Most recent year federal returns (all schedules) and W-2/1099 forms.", icon: FileCheck },
-              ].map((doc, idx) => {
-                const Icon = doc.icon;
-                return (
-                  <div key={idx} className="p-5 bg-white border border-neutral-sand/20 rounded-2xl shadow-xs hover:border-[#dcae76]/40 transition-colors flex items-start gap-4">
-                    <div className="p-2.5 bg-[#dcae76]/10 text-[#cda26b] rounded-lg flex-shrink-0">
-                      <Icon className="w-5 h-5" />
+            <div className="lg:col-span-7 order-1 lg:order-2 z-10 relative p-8 sm:p-12 lg:pl-0 lg:pr-16">
+              <h2 className="text-3xl sm:text-4xl font-display font-semibold mb-6 text-white">
+                Required Verification Documents
+              </h2>
+              <p className="text-neutral-sand/70 leading-relaxed mb-10 text-sm sm:text-base max-w-xl">
+                Under City and County of Honolulu regulations, all household income variables must be fully certified. We recommend organizing these four key items beforehand to expedite your compliance review.
+              </p>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                {[
+                  { title: "1. Photo Identification", desc: "Government-issued photo IDs for all adult household members.", icon: Shield },
+                  { title: "2. Paystubs", desc: "2–3 months of recent consecutive paystubs for all active employment.", icon: Coins },
+                  { title: "3. Bank Statements", desc: "2 months of complete statements for all checking and savings accounts.", icon: FileText },
+                  { title: "4. Tax Filings", desc: "Most recent year federal returns (all schedules) and W-2/1099 forms.", icon: FileCheck },
+                ].map((doc, idx) => {
+                  const Icon = doc.icon;
+                  return (
+                    <div key={idx} className="p-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl hover:bg-white/10 transition-colors flex items-start gap-4">
+                      <div className="p-3 bg-[#dcae76]/10 text-[#dcae76] rounded-xl flex-shrink-0">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-white text-sm mb-1.5">{doc.title}</h4>
+                        <p className="text-xs text-neutral-sand/60 leading-relaxed">{doc.desc}</p>
+                      </div>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-charcoal-dark text-sm mb-1">{doc.title}</h4>
-                      <p className="text-xs text-charcoal-muted leading-relaxed">{doc.desc}</p>
-                    </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
+              
+              <div className="inline-flex items-center gap-3 bg-[#dcae76]/10 border border-[#dcae76]/20 rounded-xl px-5 py-4">
+                <CheckCircle2 className="w-5 h-5 text-[#dcae76] flex-shrink-0" />
+                <span className="text-xs font-semibold text-[#dcae76] uppercase tracking-wider">A full compliance checklist has been sent to your email.</span>
+              </div>
             </div>
-            
-            <p className="text-xs font-semibold text-[#cda26b] flex items-center gap-1.5 bg-[#dcae76]/5 border border-[#dcae76]/15 rounded-xl px-4 py-3">
-              <CheckCircle2 className="w-4 h-4 text-[#cdae76] flex-shrink-0" />
-              <span>A full compliance checklist and official self-certification packets have been sent to your email.</span>
-            </p>
           </div>
         </section>
       )}
 
       {/* FAQ Section - Show only for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="faq" className="py-20 sm:py-28 bg-neutral-linen/35 border-t border-b border-neutral-sand/15 animate-fade-in">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            
+        <section id="faq" className="py-24 bg-neutral-linen/20 border-t border-b border-neutral-sand/15 animate-fade-in relative overflow-hidden">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
             <div className="text-center mb-16">
-              <h2 className="text-3xl sm:text-4xl font-display font-semibold text-charcoal-dark mb-4">
+              <h2 className="text-3xl sm:text-4xl font-display font-semibold mb-4 text-charcoal-dark">
                 Frequently Asked Questions
               </h2>
               <p className="text-charcoal-muted">
@@ -1489,18 +1499,18 @@ export default function HomePage() {
               {faqData.map((faq, idx) => {
                 const isOpen = openFaq === idx;
                 return (
-                  <div key={idx} className="bg-white border border-neutral-sand/20 rounded-sm overflow-hidden shadow-sm">
+                  <div key={idx} className="bg-white border border-neutral-sand/20 rounded-2xl overflow-hidden shadow-sm transition-all duration-300">
                     <button
                       onClick={() => toggleFaq(idx)}
-                      className="w-full flex items-center justify-between p-6 text-left focus:outline-none transition-colors"
+                      className="w-full flex items-center justify-between p-6 text-left focus:outline-none hover:bg-neutral-ivory/30 transition-colors"
                     >
                       <span className="font-semibold text-charcoal-dark text-base sm:text-lg pr-4">{faq.q}</span>
-                      <span className="p-1.5 bg-neutral-linen/55 rounded-full text-charcoal-muted">
+                      <span className={`p-2 rounded-full transition-colors ${isOpen ? 'bg-[#dcae76]/20 text-[#cda26b]' : 'bg-neutral-linen/80 text-charcoal-muted'}`}>
                         {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                       </span>
                     </button>
                     {isOpen && (
-                      <div className="px-6 pb-6 pt-1 text-sm text-charcoal-muted leading-relaxed border-t border-neutral-sand/10 bg-neutral-ivory/20">
+                      <div className="px-6 pb-6 pt-2 text-sm text-charcoal-muted leading-relaxed">
                         {faq.a}
                       </div>
                     )}
@@ -1508,74 +1518,75 @@ export default function HomePage() {
                 );
               })}
             </div>
-
           </div>
         </section>
       )}
 
       {/* Launch Updates Capture Section - Show for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && !wantsUpdates && (
-        <section id="join-updates" className="py-20 sm:py-28 bg-white max-w-4xl mx-auto px-4 sm:px-6 text-center animate-fade-in">
-          <div className="inline-flex p-3 bg-brand-gold/10 rounded-sm text-brand-gold mb-5">
-            <Bookmark className="w-6 h-6" />
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-display font-semibold text-charcoal-dark mb-4">
-            Join Amana Lofts Launch List
-          </h2>
-          <p className="text-charcoal-muted max-w-lg mx-auto mb-10 text-sm sm:text-base leading-relaxed">
-            Sign up to receive development updates, municipal assessment timelines, and leasing instructions directly in your inbox.
-          </p>
-
-          {updatesStatus === 'success' ? (
-            <div className="max-w-md mx-auto p-8 bg-green-50 border border-green-200 rounded-sm">
-              <Check className="w-10 h-10 text-green-600 mx-auto mb-4" />
-              <h3 className="font-semibold text-green-800 text-lg mb-2">You're on the list!</h3>
-              <p className="text-sm text-green-700">
-                Thank you for signing up. We will notify you when applications open or new guidelines are released.
-              </p>
+        <section id="join-updates" className="py-24 bg-[#1c1a17] text-white text-center animate-fade-in relative">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
+            <div className="inline-flex p-3 bg-[#dcae76]/10 rounded-2xl text-[#dcae76] mb-6 border border-[#dcae76]/20 shadow-lg">
+              <Bookmark className="w-6 h-6" />
             </div>
-          ) : (
-            <form onSubmit={handleUpdatesSubmit} className="max-w-lg mx-auto flex flex-col gap-3">
-              {updatesStatus === 'error' && (
-                <p className="text-sm text-red-600 bg-red-50 p-3 rounded-sm border border-red-200 mb-2">
-                  Failed to sign up. Please check your inputs or try again.
+            <h2 className="text-3xl sm:text-4xl font-display font-semibold mb-4 text-white">
+              Join Amana Lofts Launch List
+            </h2>
+            <p className="text-neutral-sand/60 max-w-lg mx-auto mb-10 text-sm sm:text-base leading-relaxed">
+              Sign up to receive development updates, municipal assessment timelines, and leasing instructions directly in your inbox.
+            </p>
+
+            {updatesStatus === 'success' ? (
+              <div className="max-w-md mx-auto p-8 bg-green-900/20 border border-green-500/30 rounded-2xl backdrop-blur-sm">
+                <Check className="w-10 h-10 text-green-400 mx-auto mb-4" />
+                <h3 className="font-semibold text-green-300 text-lg mb-2">You're on the list!</h3>
+                <p className="text-sm text-green-400/80">
+                  Thank you for signing up. We will notify you when applications open or new guidelines are released.
                 </p>
-              )}
-              
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="text"
-                  required
-                  placeholder="Your Name"
-                  value={updatesName}
-                  onChange={(e) => setUpdatesName(e.target.value)}
-                  disabled={updatesStatus === 'loading'}
-                  className="w-full px-4 py-3.5 border border-neutral-sand/65 rounded-sm focus:outline-none focus:ring-2 focus:ring-brand-gold/40 focus:border-brand-gold text-sm bg-neutral-ivory/10"
-                />
-                <input
-                  type="email"
-                  required
-                  placeholder="Email Address"
-                  value={updatesEmail}
-                  onChange={(e) => setUpdatesEmail(e.target.value)}
-                  disabled={updatesStatus === 'loading'}
-                  className="w-full px-4 py-3.5 border border-neutral-sand/65 rounded-sm focus:outline-none focus:ring-2 focus:ring-brand-gold/40 focus:border-brand-gold text-sm bg-neutral-ivory/10"
-                />
               </div>
-              
-              <button
-                type="submit"
-                disabled={updatesStatus === 'loading'}
-                className="w-full sm:w-auto px-8 py-4 bg-brand-gold hover:bg-brand-gold-dark text-white rounded-sm text-sm font-semibold tracking-wide transition-all shadow-md focus:outline-none self-center mt-2"
-              >
-                {updatesStatus === 'loading' ? 'Joining...' : 'Subscribe to Updates'}
-              </button>
-              
-              <p className="text-[11px] text-charcoal-muted leading-relaxed mt-4 max-w-md mx-auto">
-                By joining, you agree to receive project emails. We value privacy and never share credentials. You can unsubscribe at any time.
-              </p>
-            </form>
-          )}
+            ) : (
+              <form onSubmit={handleUpdatesSubmit} className="max-w-lg mx-auto flex flex-col gap-4">
+                {updatesStatus === 'error' && (
+                  <p className="text-sm text-red-400 bg-red-900/20 p-4 rounded-xl border border-red-500/30 mb-2">
+                    Failed to sign up. Please check your inputs or try again.
+                  </p>
+                )}
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    required
+                    placeholder="Your Name"
+                    value={updatesName}
+                    onChange={(e) => setUpdatesName(e.target.value)}
+                    disabled={updatesStatus === 'loading'}
+                    className="w-full px-5 py-4 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/50 focus:border-[#dcae76] text-sm bg-white/5 text-white placeholder:text-white/40 transition-all"
+                  />
+                  <input
+                    type="email"
+                    required
+                    placeholder="Email Address"
+                    value={updatesEmail}
+                    onChange={(e) => setUpdatesEmail(e.target.value)}
+                    disabled={updatesStatus === 'loading'}
+                    className="w-full px-5 py-4 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/50 focus:border-[#dcae76] text-sm bg-white/5 text-white placeholder:text-white/40 transition-all"
+                  />
+                </div>
+                
+                <button
+                  type="submit"
+                  disabled={updatesStatus === 'loading'}
+                  className="w-full px-8 py-4 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] rounded-xl text-sm font-semibold tracking-wider uppercase transition-all shadow-lg focus:outline-none self-center mt-2"
+                >
+                  {updatesStatus === 'loading' ? 'Joining...' : 'Subscribe to Updates'}
+                </button>
+                
+                <p className="text-[11px] text-neutral-sand/50 leading-relaxed mt-4 max-w-md mx-auto">
+                  By joining, you agree to receive project emails. We value privacy and never share credentials. You can unsubscribe at any time.
+                </p>
+              </form>
+            )}
+          </div>
         </section>
       )}
 
