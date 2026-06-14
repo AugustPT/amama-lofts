@@ -546,38 +546,27 @@ export default function AdminPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-neutral-linen/40 border-b border-neutral-sand/20 text-xs font-semibold text-charcoal-dark uppercase tracking-wider">
-                <th className="p-4 sm:p-5">Name & Contacts</th>
-                <th className="p-4 sm:p-5 text-center">Size</th>
-                <th 
-                  onClick={() => toggleSort('desired_unit_type')} 
-                  className="p-4 sm:p-5 cursor-pointer hover:bg-neutral-linen/60 transition-colors"
-                >
-                  <div className="flex items-center gap-1.5">
-                    Unit Interest
-                    <ArrowUpDown className="w-3.5 h-3.5 text-charcoal-muted" />
-                  </div>
-                </th>
+                <th className="p-4 sm:p-5">Applicant</th>
+                <th className="p-4 sm:p-5">Preferences</th>
                 <th 
                   onClick={() => toggleSort('annual_income')} 
                   className="p-4 sm:p-5 cursor-pointer hover:bg-neutral-linen/60 transition-colors"
                 >
                   <div className="flex items-center gap-1.5">
-                    Gross Income
+                    Annual Income
                     <ArrowUpDown className="w-3.5 h-3.5 text-charcoal-muted" />
                   </div>
                 </th>
-                <th className="p-4 sm:p-5">Eligibility State</th>
-                <th className="p-4 sm:p-5">Move-In</th>
+                <th className="p-4 sm:p-5 text-center">Status</th>
                 <th 
                   onClick={() => toggleSort('created_at')} 
                   className="p-4 sm:p-5 cursor-pointer hover:bg-neutral-linen/60 transition-colors"
                 >
                   <div className="flex items-center gap-1.5">
-                    Created (UTC)
+                    Submitted
                     <ArrowUpDown className="w-3.5 h-3.5 text-charcoal-muted" />
                   </div>
                 </th>
-                <th className="p-4 sm:p-5">Source</th>
                 <th className="p-4 sm:p-5 text-right">Actions</th>
               </tr>
             </thead>
@@ -585,7 +574,7 @@ export default function AdminPage() {
             <tbody className="divide-y divide-neutral-sand/15 text-sm">
               {processedLeads.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="p-10 text-center text-charcoal-muted">
+                  <td colSpan={6} className="p-10 text-center text-charcoal-muted">
                     No matching leads found.
                   </td>
                 </tr>
@@ -594,68 +583,64 @@ export default function AdminPage() {
                   <tr 
                     key={lead.id} 
                     onClick={() => { setSelectedLead(lead); setReferralSentStatus(false); }}
-                    className="hover:bg-neutral-linen/15 transition-colors cursor-pointer"
+                    className="hover:bg-neutral-linen/15 transition-colors cursor-pointer font-sans"
                   >
-                    {/* Name & Contact */}
+                    {/* Applicant Info */}
                     <td className="p-4 sm:p-5">
                       <div className="font-semibold text-charcoal-dark flex flex-wrap items-center gap-1.5">
                         <span>{lead.first_name} {lead.last_name}</span>
                         {lead.authorized_transfer && (
-                          <span className="inline-block px-1.5 py-0.2 bg-brand-gold/15 text-brand-gold-dark border border-brand-gold/20 text-[9px] font-bold rounded-sm uppercase tracking-wider">
-                            Portfolio Match
+                          <span className="inline-block px-1.5 py-0.5 bg-brand-gold/15 text-brand-gold-dark border border-brand-gold/20 text-[9px] font-bold rounded-sm uppercase tracking-wider">
+                            Transfer Enabled
                           </span>
                         )}
                       </div>
-                      <div className="text-xs text-charcoal-muted mt-1 space-y-0.5">
-                        <div className="block">{lead.email}</div>
-                        <div className="block">{lead.phone}</div>
+                      <div className="text-xs text-charcoal-muted mt-1">
+                        {lead.email} &bull; {lead.phone}
                       </div>
                     </td>
 
-                    {/* Size */}
-                    <td className="p-4 sm:p-5 font-semibold text-charcoal-dark text-center">
-                      {lead.household_size}
+                    {/* Preferences */}
+                    <td className="p-4 sm:p-5">
+                      <div className="font-medium text-charcoal-body capitalize">
+                        {lead.desired_unit_type.replace('-', ' ')} &bull; {lead.household_size} {lead.household_size === 1 ? 'person' : 'people'}
+                      </div>
+                      <div className="text-xs text-charcoal-muted mt-1 capitalize">
+                        Move-in: {lead.move_timing.replace(/-/g, ' ')}
+                      </div>
                     </td>
 
-                    {/* Unit */}
+                    {/* Annual Income */}
                     <td className="p-4 sm:p-5">
-                      <span className="capitalize font-medium text-charcoal-body">{lead.desired_unit_type}</span>
+                      <div className="font-semibold text-charcoal-dark">
+                        ${Number(lead.annual_income).toLocaleString()}
+                      </div>
+                      <div className="text-[10px] text-charcoal-muted mt-0.5">
+                        {lead.income_range_label}
+                      </div>
                     </td>
 
-                    {/* Income */}
-                    <td className="p-4 sm:p-5">
-                      <div className="font-semibold text-charcoal-dark">${Number(lead.annual_income).toLocaleString()}</div>
-                      <div className="text-[10px] text-charcoal-muted mt-0.5 leading-tight">{lead.income_range_label}</div>
-                    </td>
-
-                    {/* Result */}
-                    <td className="p-4 sm:p-5">
+                    {/* Status Badge */}
+                    <td className="p-4 sm:p-5 text-center">
                       <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold border ${getResultBadgeClass(lead.eligibility_result)}`}>
                         {getResultLabel(lead.eligibility_result)}
                       </span>
                     </td>
 
-                    {/* Move-in */}
-                    <td className="p-4 sm:p-5 text-xs font-medium text-charcoal-body">
-                      {lead.move_timing.replace(/-/g, ' ')}
+                    {/* Submitted Date */}
+                    <td className="p-4 sm:p-5 text-xs text-charcoal-muted">
+                      {new Date(lead.created_at).toLocaleDateString(undefined, { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                      })}
                     </td>
 
-                    {/* Created */}
-                    <td className="p-4 sm:p-5 text-xs text-charcoal-muted">
-                      {new Date(lead.created_at).toLocaleString()}
-                    </td>
-
-                    {/* Marketing */}
-                    <td className="p-4 sm:p-5 text-xs text-charcoal-muted">
-                      <span className="px-2 py-0.5 bg-neutral-sand/25 rounded-sm text-[10px] uppercase font-semibold text-charcoal-muted">
-                        {lead.utm_source || 'direct'}
-                      </span>
-                    </td>
-                    
-                    {/* Action */}
+                    {/* Action Button */}
                     <td className="p-4 sm:p-5 text-right">
                       <button className="text-xs text-brand-gold hover:text-brand-gold-dark font-semibold focus:outline-none">
-                        View Details &rarr;
+                        Details &rarr;
                       </button>
                     </td>
                   </tr>
