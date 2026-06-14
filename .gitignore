@@ -44,3 +44,5 @@ next-env.d.ts
 leads_db.json
 *.mp3
 *.wav
+
+.vercel
