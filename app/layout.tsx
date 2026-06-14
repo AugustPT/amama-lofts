@@ -140,21 +140,7 @@ export default function RootLayout({
             </Link>
             
             <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-              <Link href="/#units" className="text-charcoal-muted hover:text-brand-gold transition-colors">
-                Floor Plans
-              </Link>
-              <Link href="/#location" className="text-charcoal-muted hover:text-brand-gold transition-colors">
-                Location
-              </Link>
-              <Link href="/#how-it-works" className="text-charcoal-muted hover:text-brand-gold transition-colors">
-                How It Works
-              </Link>
-              <Link href="/#checklist" className="text-charcoal-muted hover:text-brand-gold transition-colors">
-                Document Checklist
-              </Link>
-              <Link href="/#faq" className="text-charcoal-muted hover:text-brand-gold transition-colors">
-                FAQs
-              </Link>
+              {/* Removed conditional anchor links to prevent broken global navigation */}
             </nav>
 
             <div className="flex items-center gap-3">
@@ -162,7 +148,7 @@ export default function RootLayout({
                 Admin
               </Link>
               <Link
-                href="/screener"
+                href="/#screener-section"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-brand-gold hover:bg-brand-gold-dark text-white text-sm font-medium tracking-wide transition-all shadow-sm focus:ring-2 focus:ring-brand-gold/50 focus:outline-none"
               >
                 <ClipboardCheck className="w-4 h-4" />

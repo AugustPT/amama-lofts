@@ -910,10 +910,10 @@ export default function ScreenerPage() {
 
                         <div className="px-8 pb-8">
                           <Link
-                            href="/screener"
+                            href="/#how-it-works"
                             className="w-full block text-center py-3.5 bg-neutral-ivory hover:bg-[#dcae76] hover:text-[#1c1a17] border border-neutral-sand text-charcoal-body text-sm font-semibold rounded-xl transition-all focus:outline-none"
                           >
-                            Reserve Unit &rarr;
+                            View Leasing Process &rarr;
                           </Link>
                         </div>
                       </div>
@@ -1103,12 +1103,12 @@ export default function ScreenerPage() {
                     </div>
 
                     <div className="px-8 pb-8">
-                      <Link
-                        href="/screener"
+                      <a
+                        href="mailto:sales@amanalofts.com?subject=Penthouse Inquiry"
                         className="w-full block text-center py-3.5 bg-neutral-ivory hover:bg-[#dcae76] hover:text-[#1c1a17] border border-neutral-sand text-charcoal-body text-sm font-semibold rounded-xl transition-all focus:outline-none"
                       >
                         Inquire About Penthouses &rarr;
-                      </Link>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -1212,7 +1212,7 @@ export default function ScreenerPage() {
           )}
 
           {/* Launch Updates Capture Section - Show for Standard and Priority Paths */}
-          {(assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
+          {(assessment.result === 'likely_fit' || assessment.result === 'needs_review') && !wantsUpdates && (
             <section id="join-updates" className="py-20 sm:py-28 bg-white max-w-4xl mx-auto px-4 sm:px-6 text-center animate-fade-in w-full">
               <div className="inline-flex p-3 bg-brand-gold/10 rounded-sm text-brand-gold mb-5">
                 <Bookmark className="w-6 h-6" />

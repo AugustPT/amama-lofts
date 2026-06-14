@@ -437,7 +437,7 @@ export default function HomePage() {
 
               {/* Centered Golden See If I Qualify Button */}
               <Link
-                href="/screener"
+                href="#screener-section"
                 className="w-full max-w-[280px] py-4 rounded-xl bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-center transition-all tracking-wide text-sm shadow-md focus:outline-none"
               >
                 See If I Qualify
@@ -512,7 +512,7 @@ export default function HomePage() {
 
           {/* Centered See If I Qualify Button */}
           <Link
-            href="/screener"
+            href="#screener-section"
             className="px-14 py-4.5 rounded-sm bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-center transition-all tracking-wider text-sm shadow-md focus:outline-none"
           >
             See If I Qualify
@@ -1115,10 +1115,10 @@ export default function HomePage() {
 
                     <div className="px-8 pb-8">
                       <Link
-                        href="/screener"
+                        href="#how-it-works"
                         className="w-full block text-center py-3.5 bg-neutral-ivory hover:bg-[#dcae76] hover:text-[#1c1a17] border border-neutral-sand text-charcoal-body text-sm font-semibold rounded-xl transition-all focus:outline-none"
                       >
-                        Check Qualification
+                        View Leasing Process
                       </Link>
                     </div>
                   </div>
@@ -1316,15 +1316,12 @@ export default function HomePage() {
                 </div>
 
                 <div className="px-8 pb-8">
-                  <button
-                    onClick={() => {
-                      const el = document.getElementById('screener-section');
-                      if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    }}
+                  <a
+                    href="mailto:sales@amanalofts.com?subject=Penthouse Inquiry"
                     className="w-full block text-center py-3.5 bg-neutral-ivory hover:bg-[#dcae76] hover:text-[#1c1a17] border border-neutral-sand text-charcoal-body text-sm font-semibold rounded-xl transition-all focus:outline-none"
                   >
                     Request Callback for Penthouses &rarr;
-                  </button>
+                  </a>
                 </div>
               </div>
             </div>
@@ -1513,7 +1510,7 @@ export default function HomePage() {
       )}
 
       {/* Launch Updates Capture Section - Show for Standard and Priority Paths */}
-      {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
+      {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && !wantsUpdates && (
         <section id="join-updates" className="py-20 sm:py-28 bg-white max-w-4xl mx-auto px-4 sm:px-6 text-center animate-fade-in">
           <div className="inline-flex p-3 bg-brand-gold/10 rounded-sm text-brand-gold mb-5">
             <Bookmark className="w-6 h-6" />
