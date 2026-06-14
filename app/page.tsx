@@ -407,7 +407,7 @@ export default function HomePage() {
           
           <div className="w-full max-w-[450px] animate-slide-up">
             {/* Glassmorphic Card */}
-            <div className="bg-[#1c1a17]/50 backdrop-blur-xl border border-white/10 rounded-[32px] p-8 sm:p-12 flex flex-col items-center text-center shadow-2xl">
+            <div className="bg-[#1c1a17]/75 backdrop-blur-2xl border border-white/10 rounded-[32px] p-8 sm:p-12 flex flex-col items-center text-center shadow-2xl">
               
               {/* Gold double peaked logo */}
               <svg className="w-16 h-16 text-[#dcae76] mb-4" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="4.5">
@@ -734,7 +734,7 @@ export default function HomePage() {
                             className="block w-full pl-10 pr-4 py-4 border border-neutral-sand/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/45 focus:border-[#dcae76] text-lg font-semibold bg-white"
                           />
                         </div>
-                        <p className="text-[11px] text-charcoal-muted mt-2 leading-relaxed">
+                        <p className="text-xs text-charcoal-muted mt-2 leading-relaxed">
                           Include wages, salaries, business profits, social security, pension, and other recurring household revenue.
                         </p>
                       </div>
@@ -1377,7 +1377,7 @@ export default function HomePage() {
                 <div key={idx} className="flex justify-between items-center p-5 bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl hover:bg-white/10 transition-colors group">
                   <div>
                     <span className="block font-semibold text-white text-sm">{lm.name}</span>
-                    <span className="block text-[11px] text-[#dcae76] mt-0.5">{lm.distance}</span>
+                    <span className="block text-xs font-semibold text-[#dcae76] mt-0.5">{lm.distance}</span>
                   </div>
                   <span className="text-xs font-semibold text-white whitespace-nowrap bg-black/40 px-3 py-1.5 rounded-lg group-hover:bg-black/60 transition-colors">
                     {lm.time}
@@ -1399,7 +1399,7 @@ export default function HomePage() {
               <h2 className="text-3xl sm:text-4xl font-display font-semibold mb-4 text-[#dcae76]">
                 How the Leasing Process Works
               </h2>
-              <p className="text-neutral-sand/60 max-w-xl mx-auto">
+              <p className="text-neutral-sand/85 max-w-xl mx-auto">
                 Amana Lofts follows a structured municipal compliance workflow to ensure fair and accurate placement.
               </p>
             </div>
@@ -1418,7 +1418,7 @@ export default function HomePage() {
                     {item.step}
                   </span>
                   <h3 className="text-lg font-semibold mb-3 text-white">{item.title}</h3>
-                  <p className="text-sm text-neutral-sand/60 leading-relaxed group-hover:text-neutral-sand/80 transition-colors">{item.desc}</p>
+                  <p className="text-sm text-neutral-sand/85 leading-relaxed group-hover:text-neutral-sand/95 transition-colors">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -1466,7 +1466,7 @@ export default function HomePage() {
                       </div>
                       <div>
                         <h4 className="font-semibold text-white text-sm mb-1.5">{doc.title}</h4>
-                        <p className="text-xs text-neutral-sand/60 leading-relaxed">{doc.desc}</p>
+                        <p className="text-xs text-neutral-sand/80 leading-relaxed">{doc.desc}</p>
                       </div>
                     </div>
                   );
@@ -1532,7 +1532,7 @@ export default function HomePage() {
             <h2 className="text-3xl sm:text-4xl font-display font-semibold mb-4 text-white">
               Join Amana Lofts Launch List
             </h2>
-            <p className="text-neutral-sand/60 max-w-lg mx-auto mb-10 text-sm sm:text-base leading-relaxed">
+            <p className="text-neutral-sand/85 max-w-lg mx-auto mb-10 text-sm sm:text-base leading-relaxed">
               Sign up to receive development updates, municipal assessment timelines, and leasing instructions directly in your inbox.
             </p>
 
@@ -1560,7 +1560,7 @@ export default function HomePage() {
                     value={updatesName}
                     onChange={(e) => setUpdatesName(e.target.value)}
                     disabled={updatesStatus === 'loading'}
-                    className="w-full px-5 py-4 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/50 focus:border-[#dcae76] text-sm bg-white/5 text-white placeholder:text-white/40 transition-all"
+                    className="w-full px-5 py-4 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/50 focus:border-[#dcae76] text-sm bg-white/5 text-white placeholder:text-white/60 transition-all"
                   />
                   <input
                     type="email"
@@ -1569,7 +1569,7 @@ export default function HomePage() {
                     value={updatesEmail}
                     onChange={(e) => setUpdatesEmail(e.target.value)}
                     disabled={updatesStatus === 'loading'}
-                    className="w-full px-5 py-4 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/50 focus:border-[#dcae76] text-sm bg-white/5 text-white placeholder:text-white/40 transition-all"
+                    className="w-full px-5 py-4 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/50 focus:border-[#dcae76] text-sm bg-white/5 text-white placeholder:text-white/60 transition-all"
                   />
                 </div>
                 
@@ -1581,7 +1581,7 @@ export default function HomePage() {
                   {updatesStatus === 'loading' ? 'Joining...' : 'Subscribe to Updates'}
                 </button>
                 
-                <p className="text-[11px] text-neutral-sand/50 leading-relaxed mt-4 max-w-md mx-auto">
+                <p className="text-xs text-neutral-sand/65 leading-relaxed mt-4 max-w-md mx-auto">
                   By joining, you agree to receive project emails. We value privacy and never share credentials. You can unsubscribe at any time.
                 </p>
               </form>
@@ -1632,7 +1632,7 @@ export default function HomePage() {
 
           </div>
 
-          <div className="text-left text-[11px] text-neutral-sand/55 leading-relaxed space-y-4">
+          <div className="text-left text-xs text-neutral-sand/65 leading-relaxed space-y-4">
             <p>
               <strong>Compliance Statement:</strong> Amana Lofts does not discriminate on the basis of race, color, national origin, religion, sex, familial status, disability, sexual orientation, or gender identity. Preliminary screening metrics do not guarantee placement. Rental rates and qualifying parameters are subject to the official municipal guidelines for Honolulu County.
             </p>

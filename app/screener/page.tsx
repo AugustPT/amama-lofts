@@ -676,7 +676,7 @@ export default function ScreenerPage() {
               </div>
 
               {/* Mandatory Disclaimer */}
-              <p className="text-[11px] text-charcoal-muted border-t border-neutral-sand/25 pt-4 leading-relaxed mb-6">
+              <p className="text-xs text-charcoal-muted border-t border-neutral-sand/25 pt-4 leading-relaxed mb-6">
                 <strong>Disclaimer:</strong> This tool is a preliminary self-check only and does not guarantee eligibility, approval, availability, rent amount, or unit placement. Final eligibility, rents, application timing, required documents, and selection process are subject to official published program guidelines and full review.
               </p>
             </form>
@@ -1273,7 +1273,7 @@ export default function ScreenerPage() {
                     {updatesStatus === 'loading' ? 'Joining...' : 'Subscribe to Updates'}
                   </button>
                   
-                  <p className="text-[11px] text-charcoal-muted leading-relaxed mt-4 max-w-md mx-auto">
+                  <p className="text-xs text-charcoal-muted leading-relaxed mt-4 max-w-md mx-auto">
                     By joining, you agree to receive project emails. We value privacy and never share credentials. You can unsubscribe at any time.
                   </p>
                 </form>
@@ -1325,7 +1325,7 @@ export default function ScreenerPage() {
 
           </div>
 
-          <div className="text-left text-[11px] text-neutral-sand/55 leading-relaxed space-y-4">
+          <div className="text-left text-xs text-neutral-sand/65 leading-relaxed space-y-4">
             <p>
               <strong>Compliance Statement:</strong> Amana Lofts does not discriminate on the basis of race, color, national origin, religion, sex, familial status, disability, sexual orientation, or gender identity. Preliminary screening metrics do not guarantee placement. Rental rates and qualifying parameters are subject to the official municipal guidelines for Honolulu County.
             </p>
