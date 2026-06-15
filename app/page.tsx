@@ -8,20 +8,12 @@ import {
   MapPin, 
   ArrowRight, 
   Home as HomeIcon, 
-  Clock, 
-  Coins, 
-  FileText, 
   Check, 
   Plus, 
   Minus,
-  Sparkles,
-  Tv,
   ArrowUpRight,
   Bookmark,
   Users,
-  Locate,
-  Building,
-  KeyRound,
   FileCheck,
   Phone,
   DollarSign,
@@ -29,9 +21,7 @@ import {
   Mail,
   ArrowLeft,
   CheckCircle2,
-  AlertCircle,
-  ClipboardList,
-  ChevronRight
+  AlertCircle
 } from 'lucide-react';
 import { evaluateEligibility } from '@/lib/eligibility';
 
@@ -78,6 +68,7 @@ export default function HomePage() {
   const [submittedLeadId, setSubmittedLeadId] = useState<string | null>(null);
 
   // Load saved assessment or preview overrides on mount
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
@@ -136,6 +127,7 @@ export default function HomePage() {
       }
     }
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleTransferAuthorize = async () => {
     if (!submittedLeadId) return;
@@ -245,8 +237,9 @@ export default function HomePage() {
         localStorage.setItem('amana_screener_phone', phone);
       }
       setStep(6);
-    } catch (err: any) {
-      setErrorMessage(err.message || 'An error occurred. Please try again.');
+    } catch (err) {
+      const error = err as Error;
+      setErrorMessage(error.message || 'An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -286,17 +279,6 @@ export default function HomePage() {
     }
   };
 
-  const highlights = [
-    { title: "Over 10-Foot Ceilings", desc: "Enjoy open loft-style vertical volumes, enhancing light and spaciousness." },
-    { title: "Large Windows", desc: "Expansive layouts capture natural Honolulu light and island breezes." },
-    { title: "Every-Floor Laundry", desc: "Convenient shared laundry access on every residential floor." },
-    { title: "Secured Lobby", desc: "FOB-controlled entry system provides enhanced security for residents." },
-    { title: "Elevator Access", desc: "Modern elevator cabs servicing all floors with ease." },
-    { title: "Central Ala Moana", desc: "Steps from beaches, primary transit lines, and daily retail necessities." },
-    { title: "Bike Racks & Storage", desc: "Secure parking options for bicycles and alternative mobility devices." },
-    { title: "Car Share Access", desc: "On-site car-sharing options for convenient, car-free transit." },
-    { title: "Limited Covered Parking", desc: "Select garage stalls available (subject to separate application)." },
-  ];
 
   const units = [
     {
@@ -336,51 +318,35 @@ export default function HomePage() {
     { name: "Primary Bus Routes", distance: "0.05 miles", time: "1 min walk" }
   ];
 
-  const checklistItems = [
-    "Government-issued photo identification for all adult household members",
-    "Recent consecutive paystubs (past 2–3 months of earnings)",
-    "Recent statements for all active bank accounts (checking, savings)",
-    "Federal tax returns with all schedules & W-2/1099 forms (most recent year)",
-    "Documented proof of other household income (social security, pension, alimony, child support)",
-    "Signed self-certification forms and household information questionnaires"
-  ];
 
   const faqData = [
     {
-      q: "Who qualifies for housing at Amana Lofts?",
-      a: "Amana Lofts is an income-qualified rental housing community. Households must meet City & County of Honolulu guidelines. Eligible household gross income is capped at 80% of the Area Median Income (AMI), depending on household size."
+      q: "Who qualifies for Amana Lofts?",
+      a: "Households meeting Honolulu's income guidelines. Gross income is capped at 80% Area Median Income (AMI)."
     },
     {
       q: "What does 80% AMI mean?",
-      a: "Area Median Income (AMI) is the midpoint income level for a specific region. For Amana Lofts, applicants' gross annual household income must be at or below 80% of Honolulu's median income. The published 2026 limits range from $86,240 for a single person to $133,120 for a household of five."
+      a: "It is the area median income threshold. Honolulu's 2026 limits range from $86,240 (1 person) to $133,120 (5 people)."
     },
     {
-      q: "When do leasing applications open?",
-      a: "Applications are not yet open. Project construction is tracking toward completion in Summer 2026. Official application packets, timing, and leasing instructions will be sent to members of our launch updates list as soon as they are approved."
+      q: "When do applications open?",
+      a: "Applications open prior to completion in Summer 2026. Join our list to receive notification packets."
     },
     {
-      q: "Are the monthly rents posted yet?",
-      a: "Rents are currently listed as TBD. Final approved monthly rental rates and utilities breakdowns will be officially published prior to the application launch, subject to guidelines."
+      q: "Are monthly rents posted?",
+      a: "Rents are TBD. Approved rental rates will be published prior to application launch."
     },
     {
-      q: "What documents should I begin preparing?",
-      a: "We recommend gathering photo IDs, 2 months of consecutive paystubs, 2 months of complete bank statements, and your most recent federal tax returns. Additional documentation may be required during the compliance review process."
+      q: "Is parking available?",
+      a: "Yes, limited covered garage stalls are available for a monthly fee. Bike storage is free."
     },
     {
-      q: "Is parking available at the property?",
-      a: "Limited covered garage parking is planned. Vehicle parking is subject to monthly rental fees, availability, and a separate application. The property includes extensive bike racks and access to on-site car-sharing options."
+      q: "Is this screener a final decision?",
+      a: "No. This is a preliminary check. Final eligibility requires a full application and document review."
     },
     {
-      q: "How are leasing applicants selected?",
-      a: "Once applications officially open, all submissions will be processed in accordance with established program guidelines and fair housing regulations. Incomplete files will not be reviewed."
-    },
-    {
-      q: "Is this online screening tool a final eligibility decision?",
-      a: "No. This tool is a preliminary self-check only and does not guarantee eligibility, approval, availability, rent, or unit placement. Final eligibility is subject to a full review of your formal application and documents."
-    },
-    {
-      q: "Can I join the launch list if I am unsure if I qualify?",
-      a: "Yes. Anyone interested in receiving project status updates, architectural progress reports, and rental updates is welcome to join our launch list, regardless of screening outcomes."
+      q: "Can I join the list if I am unsure?",
+      a: "Yes. Anyone interested in project status and updates is welcome to subscribe."
     }
   ];
 
@@ -1336,19 +1302,29 @@ export default function HomePage() {
 
       {/* Location Map Section - Show only for Standard and Priority Paths */}
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="location" className="py-28 bg-[#faf8f5] animate-fade-in relative z-10 border-b border-neutral-sand/15">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <section 
+          id="location" 
+          className="relative py-28 bg-cover bg-center animate-fade-in z-10 border-b border-neutral-sand/15 overflow-hidden"
+          style={{ backgroundImage: "url('/images/ala_moana_aerial_map.jpg')" }}
+        >
+          {/* Dark Overlay for Legibility */}
+          <div className="absolute inset-0 bg-charcoal-dark/55 z-0" />
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
               
-              {/* Left Column: Heading, description, maps button, and a large real image */}
-              <div className="lg:col-span-6 space-y-6">
-                <div className="inline-flex p-3 bg-[#cda26b]/10 rounded-2xl text-[#cda26b] border border-[#cda26b]/20">
+              {/* Left Column: Heading, description, and maps button */}
+              <div className="lg:col-span-5 space-y-6">
+                <div className="inline-flex p-3 bg-white/10 rounded-2xl text-[#dcae76] border border-white/10">
                   <MapPin className="w-6 h-6" />
                 </div>
-                <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark tracking-wide leading-tight">
+                <h2 
+                  className="text-3xl sm:text-4xl font-serif font-light tracking-wide leading-tight"
+                  style={{ color: 'white' }}
+                >
                   Everything Ala Moana Has to Offer
                 </h2>
-                <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
+                <p className="text-neutral-sand/90 leading-relaxed text-sm sm:text-base">
                   Located at 765 Amana Street, Amana Lofts places you at the center of Honolulu&apos;s most walkable and transit-friendly district. Walk to grocery stores, beaches, shopping center terminals, and primary employment zones.
                 </p>
                 <div className="pt-2">
@@ -1356,33 +1332,26 @@ export default function HomePage() {
                     href="https://maps.google.com/?q=765+Amana+Street+Honolulu+HI+96814"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-xs rounded-xl tracking-wider uppercase transition-all focus:outline-none shadow-xs"
+                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-xs rounded-xl tracking-wider uppercase transition-all focus:outline-none shadow-md"
                   >
                     Open in Google Maps
                     <ArrowUpRight className="w-4 h-4" />
                   </a>
                 </div>
-                
-                {/* Visual Image */}
-                <div className="relative w-full h-[240px] rounded-[20px] overflow-hidden shadow-md border border-neutral-sand/20 mt-6">
-                  <Image 
-                    src="/images/sky_ala_moana.png" 
-                    alt="Ala Moana Neighborhood View" 
-                    fill 
-                    className="object-cover" 
-                  />
-                </div>
               </div>
 
-              {/* Right Column: Clean Grid of Landmarks */}
-              <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Right Column: Glassmorphic Grid of Landmarks */}
+              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {landmarks.map((lm, idx) => (
-                  <div key={idx} className="flex justify-between items-center p-4 bg-[#f5f0eb] border border-neutral-sand/20 rounded-2xl hover:bg-white hover:border-[#dcae76]/60 transition-all duration-300 group shadow-2xs">
+                  <div 
+                    key={idx} 
+                    className="flex justify-between items-center p-5 bg-[#1c1a17]/65 backdrop-blur-md border border-white/10 rounded-2xl hover:bg-[#1c1a17]/85 hover:border-[#dcae76]/50 transition-all duration-300 group shadow-md"
+                  >
                     <div>
-                      <span className="block font-semibold text-charcoal-dark text-sm">{lm.name}</span>
-                      <span className="block text-xs font-semibold text-[#cda26b] mt-0.5">{lm.distance}</span>
+                      <span className="block font-semibold text-white text-sm">{lm.name}</span>
+                      <span className="block text-xs font-semibold text-[#dcae76] mt-0.5">{lm.distance}</span>
                     </div>
-                    <span className="text-xs font-semibold text-charcoal-dark whitespace-nowrap bg-white border border-neutral-sand/30 px-3 py-1.5 rounded-lg group-hover:bg-[#dcae76] group-hover:text-[#1c1a17] transition-all duration-300">
+                    <span className="text-xs font-semibold text-white whitespace-nowrap bg-white/10 border border-white/10 px-3 py-1.5 rounded-lg group-hover:bg-[#dcae76] group-hover:text-[#1c1a17] transition-all duration-300">
                       {lm.time}
                     </span>
                   </div>
@@ -1398,52 +1367,45 @@ export default function HomePage() {
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
         <section id="how-it-works" className="py-28 bg-[#f4f0ea] animate-fade-in relative z-10 border-b border-neutral-sand/15">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
-              
-              {/* Left Column: Title and Large Interior Photo */}
-              <div className="lg:col-span-5 space-y-6">
-                <span className="text-xs font-semibold text-[#cda26b] uppercase tracking-widest block">Leasing Steps</span>
-                <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark tracking-wide leading-tight">
-                  How the Leasing Process Works
-                </h2>
-                <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
-                  Amana Lofts follows a structured municipal compliance workflow to ensure fair and accurate placement. Follow this guide to prepare your profile.
-                </p>
-                
-                {/* Large Interior Image */}
-                <div className="relative w-full aspect-[4/3] rounded-[24px] overflow-hidden shadow-lg border border-neutral-sand/20">
-                  <Image
-                    src="/images/3.jpg"
-                    alt="Amana Lofts Modern Living Interior"
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-              </div>
-
-              {/* Right Column: Clean Vertical Timeline */}
-              <div className="lg:col-span-7 space-y-8">
-                {[
-                  { step: "01", title: "Verify Sizing & Income", desc: "Check if your estimated annual gross income matches the 2026 80% AMI thresholds." },
-                  { step: "02", title: "Join Launch List", desc: "Keep updated on project benchmarks, construction progress, and application packets." },
-                  { step: "03", title: "Prepare Documents", desc: "Collect paystubs, tax files, and bank records ahead of time to ensure quick review." },
-                  { step: "04", title: "Submit Application", desc: "Complete and submit the formal application package immediately once registrations open." },
-                  { step: "05", title: "Compliance Review", desc: "Leasing managers conduct a full verification check of your assets, household size, and income." },
-                  { step: "06", title: "Final Placement", desc: "Approved households review lease terms, secure parking spots, and sign their agreements." }
-                ].map((item, idx) => (
-                  <div key={idx} className="flex gap-4 items-start">
-                    {/* Circle badge */}
-                    <div className="w-10 h-10 rounded-full bg-[#dcae76]/10 border border-[#dcae76]/20 text-[#cda26b] flex items-center justify-center font-serif text-sm font-semibold flex-shrink-0">
-                      {item.step}
-                    </div>
-                    <div>
-                      <h3 className="text-base font-semibold text-charcoal-dark mb-1">{item.title}</h3>
-                      <p className="text-xs sm:text-sm text-charcoal-muted leading-relaxed">{item.desc}</p>
-                    </div>
+            <div className="text-center mb-16 max-w-3xl mx-auto">
+              <span className="text-xs font-semibold text-[#cda26b] uppercase tracking-widest block mb-2">Leasing Steps</span>
+              <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark tracking-wide leading-tight mb-4">
+                How It Works
+              </h2>
+              <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
+                Follow our 6-step compliance process to secure your loft.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {[
+                { step: "01", title: "Verify Income", desc: "Verify income guidelines.", img: "/images/verify_income.png" },
+                { step: "02", title: "Join List", desc: "Get launch date notifications.", img: "/images/join_list.png" },
+                { step: "03", title: "Prepare Documents", desc: "Collect paystubs & tax files.", img: "/images/prepare_documents.png" },
+                { step: "04", title: "Submit Application", desc: "Submit file when window opens.", img: "/images/submit_application.png" },
+                { step: "05", title: "Compliance Review", desc: "Verification of your assets.", img: "/images/compliance_review.png" },
+                { step: "06", title: "Final Placement", desc: "Sign lease & secure loft.", img: "/images/final_placement.png" }
+              ].map((item, idx) => (
+                <div key={idx} className="bg-white border border-neutral-sand/25 shadow-md rounded-2xl overflow-hidden flex flex-col justify-between group">
+                  <div className="relative w-full aspect-[16/10] bg-neutral-sand/10 overflow-hidden">
+                    <Image
+                      src={item.img}
+                      alt={item.title}
+                      fill
+                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+                    />
                   </div>
-                ))}
-              </div>
-
+                  <div className="p-6">
+                    <div className="flex gap-3 items-center mb-2">
+                      <span className="text-xs font-serif font-bold text-[#cda26b] bg-[#dcae76]/10 px-2.5 py-1 rounded-md">
+                        {item.step}
+                      </span>
+                      <h3 className="text-base font-semibold text-charcoal-dark">{item.title}</h3>
+                    </div>
+                    <p className="text-xs text-charcoal-muted leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -1453,57 +1415,45 @@ export default function HomePage() {
       {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
         <section id="checklist" className="py-28 bg-[#faf8f5] animate-fade-in relative z-10 border-b border-neutral-sand/15">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center bg-white border border-neutral-sand/25 rounded-[32px] overflow-hidden shadow-xl relative">
-              
-              {/* Left Column: Construction/Groundbreaking Image */}
-              <div className="lg:col-span-5 relative h-[450px] lg:h-[600px] w-full">
-                <Image
-                  src="/images/amana-lofts-groundbreaking-053025.webp"
-                  alt="Amana Lofts construction updates and groundbreaking"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 45vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal-dark/10 to-transparent" />
-              </div>
+            <div className="text-center mb-16 max-w-3xl mx-auto">
+              <span className="text-xs font-semibold text-[#cda26b] uppercase tracking-widest block mb-2">Verification</span>
+              <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark tracking-wide leading-tight mb-4">
+                Required Documents
+              </h2>
+              <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
+                Honolulu regulations require income certification. Prepare these four items:
+              </p>
+            </div>
 
-              {/* Right Column: Light Document Checklist */}
-              <div className="lg:col-span-7 p-8 sm:p-12 lg:pr-12">
-                <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark mb-4 leading-tight">
-                  Required Verification Documents
-                </h2>
-                <p className="text-charcoal-muted leading-relaxed mb-8 text-sm sm:text-base max-w-xl">
-                  Under City and County of Honolulu regulations, all household income variables must be fully certified. We recommend organizing these four key items beforehand to expedite your compliance review.
-                </p>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                  {[
-                    { title: "1. Photo Identification", desc: "Government-issued photo IDs for all adult household members.", icon: Shield },
-                    { title: "2. Paystubs", desc: "2–3 months of recent consecutive paystubs for all active employment.", icon: Coins },
-                    { title: "3. Bank Statements", desc: "2 months of complete statements for all checking and savings accounts.", icon: FileText },
-                    { title: "4. Tax Filings", desc: "Most recent year federal returns (all schedules) and W-2/1099 forms.", icon: FileCheck },
-                  ].map((doc, idx) => {
-                    const Icon = doc.icon;
-                    return (
-                      <div key={idx} className="p-5 bg-[#f5f0eb] border border-neutral-sand/15 rounded-2xl hover:bg-neutral-linen/20 hover:border-[#dcae76]/50 transition-all duration-300 flex items-start gap-4">
-                        <div className="p-2.5 bg-[#dcae76]/20 text-[#cda26b] rounded-xl flex-shrink-0">
-                          <Icon className="w-5 h-5" />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-charcoal-dark text-sm mb-1">{doc.title}</h4>
-                          <p className="text-xs text-charcoal-muted leading-relaxed">{doc.desc}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+              {[
+                { title: "Photo ID", desc: "Government photo ID.", img: "/images/photo_id.png" },
+                { title: "Paystubs", desc: "Last 2-3 months of stubs.", img: "/images/paystubs.png" },
+                { title: "Bank Statements", desc: "2 months of statements.", img: "/images/bank_statements.png" },
+                { title: "Tax Filings", desc: "Recent tax return & W-2.", img: "/images/tax_filings.png" }
+              ].map((doc, idx) => (
+                <div key={idx} className="bg-white border border-neutral-sand/25 shadow-md rounded-2xl overflow-hidden flex flex-col justify-between group">
+                  <div className="relative w-full aspect-square bg-neutral-sand/10 overflow-hidden">
+                    <Image
+                      src={doc.img}
+                      alt={doc.title}
+                      fill
+                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-base font-semibold text-charcoal-dark mb-1">{doc.title}</h3>
+                    <p className="text-xs text-charcoal-muted leading-relaxed">{doc.desc}</p>
+                  </div>
                 </div>
-                
-                <div className="inline-flex items-center gap-3 bg-[#dcae76]/10 border border-[#dcae76]/20 rounded-xl px-5 py-3.5">
-                  <CheckCircle2 className="w-4 h-4 text-[#cda26b] flex-shrink-0" />
-                  <span className="text-xs font-semibold text-charcoal-dark uppercase tracking-wider">A full compliance checklist has been sent to your email.</span>
-                </div>
-              </div>
+              ))}
+            </div>
 
+            <div className="flex justify-center">
+              <div className="inline-flex items-center gap-3 bg-[#dcae76]/10 border border-[#dcae76]/20 rounded-xl px-5 py-3.5 shadow-sm">
+                <CheckCircle2 className="w-4 h-4 text-[#cda26b] flex-shrink-0" />
+                <span className="text-xs font-semibold text-charcoal-dark uppercase tracking-wider">A full checklist was sent to your email.</span>
+              </div>
             </div>
           </div>
         </section>
@@ -1522,7 +1472,7 @@ export default function HomePage() {
                   Frequently Asked Questions
                 </h2>
                 <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
-                  Find detailed explanations regarding Amana Lofts leasing parameters, timing, and qualifications.
+                  Find answers on leasing and qualifications.
                 </p>
                 
                 {/* Large Exterior Rendering */}

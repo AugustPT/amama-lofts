@@ -34,7 +34,7 @@ export default function DisclaimerPage() {
             The eligibility screening wizard on this site is designed for preliminary self-checks only.
           </p>
           <ul className="list-disc pl-5 space-y-2">
-            <li><strong>No Approval Guarantees:</strong> Results showing a "Likely Fit" or "Needs Review" are calculations based on the gross figures provided. They do NOT constitute an approval, lease offer, reservation, or guarantee of qualification.</li>
+            <li><strong>No Approval Guarantees:</strong> Results showing a &quot;Likely Fit&quot; or &quot;Needs Review&quot; are calculations based on the gross figures provided. They do NOT constitute an approval, lease offer, reservation, or guarantee of qualification.</li>
             <li><strong>Subject to Full Verification:</strong> Final eligibility is subject to the submission of a completed official application package, review of certified verification documents, and administrative audit by the leasing team.</li>
           </ul>
 

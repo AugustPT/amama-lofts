@@ -23,10 +23,11 @@ export async function GET(req: NextRequest) {
       database_mode: mode,
       leads,
     }, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to fetch leads.';
     console.error('Admin leads fetch error:', error);
     return NextResponse.json(
-      { error: error?.message || 'Failed to fetch leads.' },
+      { error: message },
       { status: 500 }
     );
   }

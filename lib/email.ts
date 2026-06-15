@@ -34,7 +34,7 @@ export async function sendLeadEmails({ lead, adminEmailRecipient }: EmailParams)
   // 1. Applicant Confirmation Email Template
   const applicantSubject = `Amana Lofts — Your Personalized Real Estate Recommendation & Placement Path`;
   
-  let applicantHtml = `
+  const applicantHtml = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 30px 20px; color: #1C1E21; line-height: 1.6; background-color: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 4px;">
       <h2 style="color: #1C1E21; font-weight: normal; margin-top: 0; border-bottom: 2px solid #C5A880; padding-bottom: 15px; font-size: 24px; tracking: -0.5px;">Amana Lofts</h2>
       <p style="font-size: 16px; margin-top: 20px;">Aloha ${lead.first_name},</p>
@@ -104,7 +104,7 @@ export async function sendLeadEmails({ lead, adminEmailRecipient }: EmailParams)
   // 2. Admin Notification Email Template
   const adminSubject = `[New Lead] Amana Lofts: ${lead.first_name} ${lead.last_name} (${resultLabel})`;
   
-  let adminHtml = `
+  const adminHtml = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #1C1E21; line-height: 1.6; border: 1px solid #E5E7EB; border-radius: 8px;">
       <h2 style="color: #1C1E21; font-weight: normal; margin-top: 0; border-bottom: 1px solid #E5E7EB; padding-bottom: 10px;">New Lead Submitted</h2>
       

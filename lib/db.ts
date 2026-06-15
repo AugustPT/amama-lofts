@@ -17,8 +17,7 @@ const getLocalDbPath = (): string => {
     process.env.VERCEL ||
     process.env.NETLIFY ||
     process.env.AWS_LAMBDA_FUNCTION_NAME ||
-    process.env.LAMBDA_TASK_ROOT ||
-    process.env.NODE_ENV === 'production'
+    process.env.LAMBDA_TASK_ROOT
   );
 
   if (isServerless) {
@@ -31,7 +30,7 @@ const getLocalDbPath = (): string => {
     fs.writeFileSync(testFile, 'test');
     fs.unlinkSync(testFile);
     return path.join(process.cwd(), 'leads_db.json');
-  } catch (err) {
+  } catch {
     return path.join('/tmp', 'leads_db.json');
   }
 };
@@ -45,7 +44,7 @@ const supabase = isSupabaseConfigured
 
 // In-memory fallback database for serverless environments where file system is read-only
 const getInMemoryLeads = (): Lead[] => {
-  const g = global as any;
+  const g = global as unknown as { _inMemoryLeads?: Lead[] };
   if (!g._inMemoryLeads) {
     g._inMemoryLeads = [];
   }
@@ -179,7 +178,8 @@ export async function insertLead(input: LeadInput): Promise<Lead> {
         // If the table doesn't have authorized_transfer yet, try inserting without it
         if (error.code === '42703' || error.message?.includes('authorized_transfer')) {
           console.warn('Supabase is missing authorized_transfer column, retrying insert without it...');
-          const { authorized_transfer, ...fallbackInput } = input;
+          const fallbackInput = { ...input };
+          delete fallbackInput.authorized_transfer;
           const { data: fallbackData, error: fallbackError } = await supabase
             .from('leads')
             .insert([fallbackInput])

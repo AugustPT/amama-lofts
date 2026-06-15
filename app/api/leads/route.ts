@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!first_name || !last_name || !email || !phone || !household_size || !desired_unit_type || !annual_income) {
+    if (!first_name || !last_name || !email || !phone || !household_size || !desired_unit_type || (annual_income === undefined || annual_income === null || annual_income === '')) {
       return NextResponse.json(
         { error: 'Missing required screening or contact fields.' },
         { status: 400 }
@@ -79,10 +79,11 @@ export async function POST(req: NextRequest) {
     await sendLeadEmails({ lead: savedLead });
 
     return NextResponse.json({ success: true, lead: savedLead }, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Failed to capture lead details.';
     console.error('API lead capture error:', error);
     return NextResponse.json(
-      { error: error?.message || 'Failed to capture lead details.' },
+      { error: message },
       { status: 500 }
     );
   }

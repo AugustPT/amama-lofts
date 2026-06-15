@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
-import { Sparkles, HelpCircle, FileText, MapPin, ClipboardCheck } from "lucide-react";
+import { ClipboardCheck } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Amana Lofts | Income-Qualified Rentals in Ala Moana Honolulu",

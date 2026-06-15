@@ -7,19 +7,16 @@ import {
   Filter, 
   Search, 
   ArrowUpDown, 
-  Database,
   Users,
   CheckCircle,
   HelpCircle,
   AlertOctagon,
-  Calendar,
   Layers,
   ArrowLeft,
   X,
   Mail,
   ChevronRight,
   TrendingUp,
-  AlertTriangle,
   Lightbulb,
   Send,
   Building
@@ -53,16 +50,6 @@ export default function AdminPage() {
   const [sortField, setSortField] = useState<'created_at' | 'desired_unit_type' | 'annual_income'>('created_at');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
-  // Load password from session storage on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedPassword = sessionStorage.getItem('admin_session_pwd');
-      if (savedPassword) {
-        verifyAndFetchLeads(savedPassword);
-      }
-    }
-  }, []);
-
   const verifyAndFetchLeads = async (pwd: string) => {
     setLoading(true);
     setErrorMessage('');
@@ -80,8 +67,9 @@ export default function AdminPage() {
       if (typeof window !== 'undefined') {
         sessionStorage.setItem('admin_session_pwd', pwd);
       }
-    } catch (err: any) {
-      setErrorMessage(err.message || 'Invalid password.');
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : 'Invalid password.';
+      setErrorMessage(errMsg);
       setIsAuthenticated(false);
       if (typeof window !== 'undefined') {
         sessionStorage.removeItem('admin_session_pwd');
@@ -90,6 +78,18 @@ export default function AdminPage() {
       setLoading(false);
     }
   };
+
+  // Load password from session storage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedPassword = sessionStorage.getItem('admin_session_pwd');
+      if (savedPassword) {
+        setTimeout(() => {
+          verifyAndFetchLeads(savedPassword);
+        }, 0);
+      }
+    }
+  }, []);
 
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
