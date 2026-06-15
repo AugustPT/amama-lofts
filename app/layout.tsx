@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Link from "next/link";
-import { ClipboardCheck, Phone } from "lucide-react";
+import Header from "./components/Header";
 
 export const metadata: Metadata = {
   title: "Amana Lofts | Income-Qualified Rentals in Ala Moana Honolulu",
@@ -127,43 +126,11 @@ export default function RootLayout({
         </noscript>
       </head>
       <body className="min-h-full flex flex-col font-sans text-charcoal-body bg-neutral-ivory select-none md:select-text">
-        {/* Navigation Bar */}
-        <header className="sticky top-0 z-50 w-full glass border-b border-neutral-sand/20 transition-all duration-300">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 group focus:outline-none">
-              <span className="font-display text-2xl font-semibold tracking-wide text-charcoal-dark group-hover:text-brand-gold transition-colors">
-                AMANA LOFTS
-              </span>
-              <span className="hidden sm:inline-block px-2.5 py-0.5 text-xs font-medium bg-brand-gold/15 text-brand-gold-dark rounded-full border border-brand-gold/25">
-                Summer 2026
-              </span>
-            </Link>
-            
-            <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-              {/* Removed conditional anchor links to prevent broken global navigation */}
-            </nav>
-
-            <div className="flex items-center gap-3">
-              <a href="tel:8085550147" className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-charcoal-muted hover:text-[#cda26b] transition-colors mr-2">
-                <Phone className="w-3.5 h-3.5 text-[#dcae76]" />
-                (808) 555-0147
-              </a>
-              <Link href="/admin" className="text-xs text-charcoal-muted hover:text-brand-gold font-medium px-2 py-1 transition-colors">
-                Admin
-              </Link>
-              <Link
-                href="/#screener-section"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#dcae76] hover:bg-[#cda26b] text-[#1c1a17] text-sm font-semibold tracking-wide transition-all shadow-sm focus:ring-2 focus:ring-[#dcae76]/55 focus:outline-none"
-              >
-                <ClipboardCheck className="w-4 h-4" />
-                Check If I Qualify
-              </Link>
-            </div>
-          </div>
-        </header>
+        {/* Sky-style Absolute/Sticky Header */}
+        <Header />
 
         {/* Page Content */}
-        <div className="flex-1 flex flex-col">{children}</div>
+        <main className="flex-1 flex flex-col">{children}</main>
       </body>
     </html>
   );

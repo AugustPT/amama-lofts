@@ -26,23 +26,25 @@ export async function POST(req: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!first_name || !last_name || !email || !phone || !household_size || !desired_unit_type || (annual_income === undefined || annual_income === null || annual_income === '')) {
+    if (!first_name || !last_name || !email || !phone) {
       return NextResponse.json(
-        { error: 'Missing required screening or contact fields.' },
+        { error: 'Missing required contact fields (first name, last name, email, phone).' },
         { status: 400 }
       );
     }
+
+    // Assign defaults if not provided (for simple contact inquiries)
+    const householdSizeVal = household_size !== undefined && household_size !== null && household_size !== '' 
+      ? household_size 
+      : 1;
+    const desiredUnitTypeVal = desired_unit_type || 'Studio';
+    const annualIncomeVal = annual_income !== undefined && annual_income !== null && annual_income !== '' 
+      ? annual_income 
+      : 0;
 
     // Parse values to correct types
-    const parsedHouseholdSize = parseInt(household_size, 10);
-    const parsedAnnualIncome = parseFloat(annual_income);
-
-    if (isNaN(parsedHouseholdSize) || isNaN(parsedAnnualIncome)) {
-      return NextResponse.json(
-        { error: 'Invalid household size or annual income values.' },
-        { status: 400 }
-      );
-    }
+    const parsedHouseholdSize = parseInt(householdSizeVal, 10);
+    const parsedAnnualIncome = parseFloat(annualIncomeVal);
 
     // Re-evaluate eligibility server-side for security and accuracy
     const screeningResult = evaluateEligibility({

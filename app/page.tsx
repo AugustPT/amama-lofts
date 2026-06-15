@@ -3,1469 +3,406 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { 
-  Shield, 
-  MapPin, 
-  ArrowRight, 
-  Home as HomeIcon, 
-  Check, 
-  Plus, 
-  Minus,
-  ArrowUpRight,
-  Bookmark,
-  Users,
-  FileCheck,
-  Phone,
-  DollarSign,
-  Calendar,
-  Mail,
-  ArrowLeft,
-  CheckCircle2,
-  AlertCircle
-} from 'lucide-react';
-import { evaluateEligibility } from '@/lib/eligibility';
+import { ArrowDown, Mail, Phone, CheckCircle2, ChevronDown } from 'lucide-react';
 
 export default function HomePage() {
-  // FAQs Accordion State
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  const toggleFaq = (index: number) => {
-    setOpenFaq(openFaq === index ? null : index);
-  };
-
-  // Inline Launch Updates capture state
-  const [updatesEmail, setUpdatesEmail] = useState('');
-  const [updatesName, setUpdatesName] = useState('');
-  const [updatesStatus, setUpdatesStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-
-  // Screener Wizard States (homepage embedded)
-  const [step, setStep] = useState(1);
-  const [householdSize, setHouseholdSize] = useState<number | null>(null);
-  const [desiredUnitType, setDesiredUnitType] = useState<string>('');
-  const [annualIncome, setAnnualIncome] = useState<string>('');
-  const [moveTiming, setMoveTiming] = useState<string>('');
-  const [wantsUpdates, setWantsUpdates] = useState<boolean>(true);
-  const [consent, setConsent] = useState<boolean>(false);
-  
-  // Contact State
+  // Contact Form State
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [unitType, setUnitType] = useState('Studio');
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  
-  // Assessment Result State
-  const [assessment, setAssessment] = useState<{
-    result: 'likely_fit' | 'needs_review' | 'outside_range' | 'under_qualified';
-    message: string;
-    label: string;
-  } | null>(null);
+  const [success, setSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  // One-Click Profile Transfer State
-  const [transferAuthorized, setTransferAuthorized] = useState(false);
-  const [transferLoading, setTransferLoading] = useState(false);
-  const [submittedLeadId, setSubmittedLeadId] = useState<string | null>(null);
-
-  // Load saved assessment or preview overrides on mount
-  /* eslint-disable react-hooks/set-state-in-effect */
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const previewParam = urlParams.get('preview');
-      
-      if (previewParam) {
-        setStep(6);
-        setFirstName('Guest');
-        setPhone('(808) 555-0147');
-        if (previewParam === 'likely_fit') {
-          setAssessment({
-            result: 'likely_fit',
-            message: 'Your profile aligns fully with workforce housing guidelines. We have recorded your pre-qualification details. Please check your email for a checklist of documents to gather before applications open.',
-            label: 'likely_fit'
-          });
-        } else if (previewParam === 'needs_review') {
-          setAssessment({
-            result: 'needs_review',
-            message: 'Your profile is close to program limits or desired occupancy guidelines. We have queued your details for priority coordinator review.',
-            label: 'needs_review'
-          });
-        } else if (previewParam === 'under_qualified') {
-          setAssessment({
-            result: 'under_qualified',
-            message: 'Your estimated household gross income is below the minimum affordable range set for workforce lofts. However, you qualify for the Alternative Resources Path!',
-            label: 'under_qualified'
-          });
-        } else if (previewParam === 'outside_range') {
-          setAssessment({
-            result: 'outside_range',
-            message: 'Your income exceeds workforce guidelines. However, you qualify for the Premium & Expanded Path!',
-            label: 'outside_range'
-          });
-        }
-        return;
-      }
-
-      try {
-        const savedAssessment = localStorage.getItem('amana_screener_assessment');
-        const savedFirstName = localStorage.getItem('amana_screener_first_name');
-        const savedPhone = localStorage.getItem('amana_screener_phone');
-        const savedLeadId = localStorage.getItem('amana_screener_lead_id');
-        const savedTransfer = localStorage.getItem('amana_screener_transfer_authorized');
-        
-        if (savedAssessment) {
-          const parsed = JSON.parse(savedAssessment);
-          setAssessment(parsed);
-          setStep(6);
-          if (savedFirstName) setFirstName(savedFirstName);
-          if (savedPhone) setPhone(savedPhone);
-          if (savedLeadId) setSubmittedLeadId(savedLeadId);
-          if (savedTransfer === 'true') setTransferAuthorized(true);
-        }
-      } catch (e) {
-        console.error('Error loading state from localStorage:', e);
-      }
-    }
-  }, []);
-  /* eslint-enable react-hooks/set-state-in-effect */
-
-  const handleTransferAuthorize = async () => {
-    if (!submittedLeadId) return;
-    setTransferLoading(true);
-    try {
-      const res = await fetch('/api/leads/transfer', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ leadId: submittedLeadId }),
-      });
-      if (res.ok) {
-        setTransferAuthorized(true);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('amana_screener_transfer_authorized', 'true');
-        }
-      }
-    } catch (err) {
-      console.error('Error authorizing transfer:', err);
-    } finally {
-      setTransferLoading(false);
+  // Handle smooth scroll to anchor
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  const canGoNext = () => {
-    switch (step) {
-      case 1:
-        return householdSize !== null;
-      case 2:
-        return desiredUnitType !== '';
-      case 3:
-        return annualIncome !== '' && Number(annualIncome) >= 0;
-      case 4:
-        return moveTiming !== '';
-      case 5:
-        return firstName.trim() !== '' && 
-               lastName.trim() !== '' && 
-               email.trim() !== '' && 
-               phone.trim() !== '' && 
-               consent;
-      default:
-        return true;
-    }
-  };
-
-  const handleNext = () => {
-    if (canGoNext()) {
-      setStep((prev) => prev + 1);
-    }
-  };
-
-  const handleBack = () => {
-    if (step > 1) {
-      setStep((prev) => prev - 1);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleInquirySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canGoNext()) return;
+    if (!firstName || !lastName || !email || !phone) {
+      setErrorMsg('Please fill in all required fields.');
+      return;
+    }
 
     setLoading(true);
-    setErrorMessage('');
-
-    // Precalculate results for instant UI updates
-    const screenRes = evaluateEligibility({
-      householdSize: householdSize!,
-      desiredUnitType,
-      annualIncome: Number(annualIncome),
-    });
-    setAssessment(screenRes);
+    setErrorMsg('');
 
     try {
-      const payload = {
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        phone,
-        household_size: householdSize,
-        desired_unit_type: desiredUnitType,
-        annual_income: annualIncome,
-        move_timing: moveTiming,
-        wants_updates: wantsUpdates,
-        consent,
-      };
-
-      const response = await fetch('/api/leads', {
+      const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          phone: phone,
+          desired_unit_type: unitType,
+          household_size: 1, // Default fallback
+          annual_income: 0,   // Default fallback
+          move_timing: 'Inquiry',
+          wants_updates: true,
+          consent: true,
+        }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit form.');
+      if (res.ok) {
+        setSuccess(true);
+        setFirstName('');
+        setLastName('');
+        setEmail('');
+        setPhone('');
+      } else {
+        const data = await res.json();
+        setErrorMsg(data.error || 'Failed to submit inquiry. Please try again.');
       }
-
-      if (data.lead && data.lead.id) {
-        setSubmittedLeadId(data.lead.id);
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('amana_screener_lead_id', data.lead.id);
-        }
-      }
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('amana_screener_assessment', JSON.stringify(screenRes));
-        localStorage.setItem('amana_screener_first_name', firstName);
-        localStorage.setItem('amana_screener_phone', phone);
-      }
-      setStep(6);
     } catch (err) {
-      const error = err as Error;
-      setErrorMessage(error.message || 'An error occurred. Please try again.');
+      console.error('Error submitting inquiry:', err);
+      setErrorMsg('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpdatesSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!updatesEmail || !updatesName) return;
-
-    setUpdatesStatus('loading');
-    try {
-      // Register updates lead with basic dummy fields for screener, indicating updates only
-      const response = await fetch('/api/leads', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          first_name: updatesName.split(' ')[0] || updatesName,
-          last_name: updatesName.split(' ').slice(1).join(' ') || 'Updates',
-          email: updatesEmail,
-          phone: '000-000-0000', // Placeholder for quick capture
-          household_size: 1,
-          desired_unit_type: 'studio',
-          annual_income: 0,
-          move_timing: 'launch-summer-2026',
-          wants_updates: true,
-          consent: true,
-          utm_source: 'homepage_updates_signup',
-        }),
-      });
-
-      if (!response.ok) throw new Error();
-      setUpdatesStatus('success');
-      setUpdatesEmail('');
-      setUpdatesName('');
-    } catch {
-      setUpdatesStatus('error');
-    }
-  };
-
-
-  const units = [
-    {
-      type: "Studio",
-      count: "32 homes",
-      size: "289–346 sq ft",
-      rent: "Rent TBD",
-      term: "12-month lease term",
-      occupancy: "1–2 people"
-    },
-    {
-      type: "One Bedroom",
-      count: "20 homes",
-      size: "365–393 sq ft",
-      rent: "Rent TBD",
-      term: "12-month lease term",
-      occupancy: "1–3 people"
-    },
-    {
-      type: "Two Bedroom",
-      count: "12 homes",
-      size: "471–561 sq ft",
-      rent: "Rent TBD",
-      term: "12-month lease term",
-      occupancy: "2–5 people"
-    }
-  ];
-
-  const landmarks = [
-    { name: "Ala Moana Center", distance: "0.4 miles", time: "8 min walk" },
-    { name: "Walmart & Sam's Club", distance: "0.1 miles", time: "2 min walk" },
-    { name: "Don Quijote Grocery", distance: "0.2 miles", time: "4 min walk" },
-    { name: "Ala Moana Beach Park", distance: "0.8 miles", time: "16 min walk" },
-    { name: "Ward Village / Kakaʻako", distance: "1.1 miles", time: "5 min drive" },
-    { name: "Waikīkī", distance: "1.5 miles", time: "7 min drive" },
-    { name: "Downtown Honolulu", distance: "2.3 miles", time: "10 min drive" },
-    { name: "Primary Bus Routes", distance: "0.05 miles", time: "1 min walk" }
-  ];
-
-
-  const faqData = [
-    {
-      q: "Who qualifies for Amana Lofts?",
-      a: "Households meeting Honolulu's income guidelines. Gross income is capped at 80% Area Median Income (AMI)."
-    },
-    {
-      q: "What does 80% AMI mean?",
-      a: "It is the area median income threshold. Honolulu's 2026 limits range from $86,240 (1 person) to $133,120 (5 people)."
-    },
-    {
-      q: "When do applications open?",
-      a: "Applications open prior to completion in Summer 2026. Join our list to receive notification packets."
-    },
-    {
-      q: "Are monthly rents posted?",
-      a: "Rents are TBD. Approved rental rates will be published prior to application launch."
-    },
-    {
-      q: "Is parking available?",
-      a: "Yes, limited covered garage stalls are available for a monthly fee. Bike storage is free."
-    },
-    {
-      q: "Is this screener a final decision?",
-      a: "No. This is a preliminary check. Final eligibility requires a full application and document review."
-    },
-    {
-      q: "Can I join the list if I am unsure?",
-      a: "Yes. Anyone interested in project status and updates is welcome to subscribe."
-    }
-  ];
-
   return (
-    <div className="flex-1">
+    <div className="bg-[#fdfcf7] text-[#1c1e21] min-h-screen">
       
-      {/* Combined Hero & Screener Section */}
-      <section id="screener-section" className="relative min-h-[95vh] lg:min-h-screen flex flex-col justify-between overflow-hidden border-b border-neutral-sand/20 bg-charcoal-dark z-0 py-8 lg:py-12">
-        {/* Fullscreen Background Video */}
-        <video 
-          src="/videos/hero.mp4" 
-          autoPlay 
-          loop 
-          muted 
-          playsInline 
-          className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
-        />
-        {/* Soft Vignette Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/35 lg:to-black/20 z-10 pointer-events-none" />
-        
-        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col justify-center flex-1">
-          {/* Grid Layout: Left Column Hero Panel, Right Column Form Card */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center flex-1 w-full my-auto py-6">
-            {/* Left Column: Premium Brand & Video Overlay */}
-            <div className="lg:col-span-5 text-left text-white pr-4 animate-slide-up">
-              <h1 
-                className="text-4xl sm:text-5xl font-serif font-light text-white mb-6 leading-tight tracking-wide"
-                style={{ color: 'white' }}
-              >
-                Modern Lofts.<br />Elevated Living.
-              </h1>
-              <p className="text-zinc-300 text-sm sm:text-base leading-relaxed mb-8 max-w-sm">
-                A premier workforce affordable residential complex in the heart of Honolulu, Ala Moana. Refined layouts designed for local residents.
-              </p>
-              <div className="border border-white/10 bg-black/45 backdrop-blur-md rounded-xl px-5 py-3.5 inline-flex items-center gap-3 text-white text-xs sm:text-sm shadow-md max-w-xs">
-                <Shield className="w-4 h-4 text-[#dcae76]" />
-                <span className="font-medium text-zinc-200">Secure Eligibility Pre-Check</span>
-              </div>
-            </div>
+      {/* 1. Fullscreen Video Hero */}
+      <section className="relative h-screen w-full flex items-center justify-center overflow-hidden">
+        {/* Background Video */}
+        <div className="absolute inset-0 z-0">
+          <video
+            src="/videos/hero.mp4"
+            className="w-full h-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+          {/* Subtle overlay matching sky's dark tint */}
+          <div className="absolute inset-0 bg-[#121314]/35 z-10" />
+        </div>
 
-            {/* Right Column: Interactive Screener Wizard */}
-            <div className="lg:col-span-7 w-full">
-              <div className="bg-white border border-neutral-sand/20 rounded-2xl p-6 sm:p-10 shadow-2xl flex flex-col justify-between min-h-[480px] text-charcoal-dark transition-all relative">
-                
-                {/* Sleek inline progress bar */}
-                {step < 6 && (
-                  <div className="w-full mb-6">
-                    <div className="w-full h-1 bg-neutral-sand/10 rounded-full overflow-hidden mb-2">
-                      <div 
-                        className="h-full bg-[#dcae76] transition-all duration-500 ease-out" 
-                        style={{ width: `${(step / 5) * 100}%` }}
-                      />
-                    </div>
-                    <div className="flex justify-between items-center text-[10px] font-semibold tracking-wider text-charcoal-muted uppercase">
-                      <span>Pre-Qualification Questionnaire</span>
-                      <span className="text-[#cda26b]">Step {step} of 5</span>
-                    </div>
-                  </div>
-                )}
-                
-                {/* Active Step Content */}
-                <div className="flex-1 flex flex-col justify-center">
-                  
-                  {step === 1 && (
-                    <div className="animate-fade-in text-center">
-                      <div className="w-14 h-14 rounded-full bg-[#dcae76]/10 flex items-center justify-center text-[#dcae76] mx-auto mb-6">
-                        <Users className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-charcoal-dark mb-2">
-                        How many people will be living in your household?
-                      </h3>
-                      <p className="text-sm text-charcoal-muted mb-8">Including yourself</p>
-                      
-                      <div className="flex items-center justify-center gap-3 mb-6 relative px-8">
-                        {/* Scroll cards */}
-                        <div className="flex justify-center gap-3 overflow-x-auto py-2">
-                          {[1, 2, 3, 4, 5].map((size) => {
-                            const isSel = householdSize === size;
-                            const word = size === 1 ? 'One' : size === 2 ? 'Two' : size === 3 ? 'Three' : size === 4 ? 'Four' : 'Five or more';
-                            return (
-                              <button
-                                key={size}
-                                type="button"
-                                onClick={() => setHouseholdSize(size)}
-                                className={`w-24 h-28 flex flex-col items-center justify-center rounded-2xl border transition-all duration-300 focus:outline-none ${
-                                  isSel 
-                                    ? 'border-[#dcae76] bg-white text-[#dcae76] shadow-md scale-[1.03]' 
-                                    : 'border-neutral-sand/35 bg-white/70 text-charcoal-dark hover:border-[#dcae76]/50'
-                                }`}
-                              >
-                                <span className="text-3xl font-serif font-semibold mb-1">{size === 5 ? '5+' : size}</span>
-                                <span className="text-[9px] font-semibold text-charcoal-muted uppercase tracking-wider">{word}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                      
-                      {/* Dots pagination indicator */}
-                      <div className="flex justify-center gap-1.5 mb-2">
-                        {[1, 2, 3, 4, 5].map((idx) => (
-                          <div 
-                            key={idx} 
-                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                              householdSize === idx ? 'bg-[#dcae76] w-4' : 'bg-neutral-sand/40'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
+        {/* Centered Crest and Title Overlay */}
+        <div className="relative z-20 flex flex-col items-center max-w-4xl px-6 text-center">
+          
+          {/* Monogram crest: elegant gold box watermark */}
+          <div className="flex flex-col items-center justify-center border border-[#c5a880]/60 p-6 md:p-8 w-36 h-36 md:w-44 md:h-44 mb-8 bg-[#121314]/20 backdrop-blur-[3px] select-none">
+            <span className="font-display text-4xl md:text-5xl font-extralight tracking-widest text-[#c5a880]">A</span>
+            <span className="font-sans text-[9px] tracking-[0.3em] text-[#e0ceb6] mt-2 uppercase font-light">HONOLULU</span>
+          </div>
 
-                  {step === 2 && (
-                    <div className="animate-fade-in">
-                      <div className="w-14 h-14 rounded-full bg-[#dcae76]/10 flex items-center justify-center text-[#dcae76] mx-auto mb-6">
-                        <HomeIcon className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-charcoal-dark text-center mb-2">
-                        Desired Unit Type
-                      </h3>
-                      <p className="text-sm text-charcoal-muted text-center mb-6">Choose the type of loft-style home you are interested in.</p>
-                      
-                      <div className="grid grid-cols-1 gap-3.5 mb-6">
-                        {[
-                          { value: 'studio', label: 'Studio', desc: '32 homes (289–346 sq ft)', occupancy: '1–2 people' },
-                          { value: 'one-bedroom', label: 'One-Bedroom', desc: '20 homes (365–393 sq ft)', occupancy: '1–3 people' },
-                          { value: 'two-bedroom', label: 'Two-Bedroom', desc: '12 homes (471–561 sq ft)', occupancy: '2–5 people' },
-                        ].map((opt) => (
-                          <button
-                            key={opt.value}
-                            type="button"
-                            onClick={() => setDesiredUnitType(opt.value)}
-                            className={`flex items-center justify-between p-4 rounded-xl border text-left bg-white transition-all duration-300 focus:outline-none ${
-                              desiredUnitType === opt.value
-                                ? 'border-[#dcae76] bg-[#dcae76]/5 ring-2 ring-[#dcae76]/10'
-                                : 'border-neutral-sand/30 hover:border-[#dcae76]/45'
-                            }`}
-                          >
-                            <div>
-                              <span className="block font-semibold text-charcoal-dark text-base">{opt.label}</span>
-                              <span className="block text-xs text-charcoal-muted mt-0.5">{opt.desc}</span>
-                            </div>
-                            <span className="px-2.5 py-1 text-[10px] font-semibold bg-neutral-linen text-charcoal-muted rounded-full uppercase tracking-wider">
-                              Occupancy: {opt.occupancy}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-light tracking-[0.35em] text-white uppercase mb-6 leading-tight font-display">
+            AMANA LOFTS
+          </h1>
 
-                  {step === 3 && (
-                    <div className="animate-fade-in max-w-md mx-auto w-full">
-                      <div className="w-14 h-14 rounded-full bg-[#dcae76]/10 flex items-center justify-center text-[#dcae76] mx-auto mb-6">
-                        <DollarSign className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-charcoal-dark text-center mb-2">
-                        Household Gross Income
-                      </h3>
-                      <p className="text-sm text-charcoal-muted text-center mb-8">Enter your total estimated annual household income before taxes.</p>
-                      
-                      <div className="mb-6">
-                        <label htmlFor="income-input-home" className="block text-xs font-semibold text-charcoal-dark uppercase tracking-wider mb-2">
-                          Estimated Annual Gross Income (USD)
-                        </label>
-                        <div className="relative rounded-xl shadow-xs">
-                          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-charcoal-muted text-lg font-medium">
-                            $
-                          </div>
-                          <input
-                            id="income-input-home"
-                            type="number"
-                            required
-                            placeholder="85,000"
-                            value={annualIncome}
-                            onChange={(e) => setAnnualIncome(e.target.value)}
-                            className="block w-full pl-10 pr-4 py-4 border border-neutral-sand/40 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/45 focus:border-[#dcae76] text-lg font-semibold bg-white"
-                          />
-                        </div>
-                        <p className="text-xs text-charcoal-muted mt-2 leading-relaxed">
-                          Include wages, salaries, business profits, social security, pension, and other recurring household revenue.
-                        </p>
-                      </div>
-                    </div>
-                  )}
+          <p className="text-xs sm:text-sm tracking-[0.2em] text-[#e0ceb6] uppercase font-sans font-light max-w-xl leading-relaxed">
+            Income-Qualified Rental Residences in the Ala Moana Corridor
+          </p>
+        </div>
 
-                  {step === 4 && (
-                    <div className="animate-fade-in">
-                      <div className="w-14 h-14 rounded-full bg-[#dcae76]/10 flex items-center justify-center text-[#dcae76] mx-auto mb-6">
-                        <Calendar className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-charcoal-dark text-center mb-2">
-                        Timeline &amp; Updates
-                      </h3>
-                      <p className="text-sm text-charcoal-muted text-center mb-6">Let us know your preferred move-in window.</p>
-                      
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-                        {[
-                          { value: 'launch-summer-2026', label: 'Project Launch (Summer 2026)' },
-                          { value: 'immediate', label: 'As soon as units are ready' },
-                          { value: 'within-3-months', label: 'Within 3 months of launch' },
-                          { value: 'flexible', label: 'Flexible / Not sure' },
-                        ].map((opt) => (
-                          <button
-                            key={opt.value}
-                            type="button"
-                            onClick={() => setMoveTiming(opt.value)}
-                            className={`p-4 rounded-xl border bg-white text-left transition-all duration-300 font-medium text-xs sm:text-sm focus:outline-none ${
-                              moveTiming === opt.value
-                                ? 'border-[#dcae76] bg-[#dcae76]/5 text-[#dcae76]'
-                                : 'border-neutral-sand/35 text-charcoal-body hover:border-[#dcae76]/50'
-                            }`}
-                          >
-                            {opt.label}
-                          </button>
-                        ))}
-                      </div>
+        {/* Bouncing Arrow Down */}
+        <button
+          onClick={() => scrollToSection('welcome')}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 text-white/70 hover:text-[#c5a880] transition-colors cursor-pointer animate-bounce focus:outline-none"
+          aria-label="Scroll down to welcome section"
+        >
+          <ArrowDown className="w-8 h-8 stroke-[1.25]" />
+        </button>
+      </section>
 
-                      <div className="flex items-start gap-3 border-t border-neutral-sand/20 pt-5">
-                        <input
-                          id="wants-updates-home"
-                          type="checkbox"
-                          checked={wantsUpdates}
-                          onChange={(e) => setWantsUpdates(e.target.checked)}
-                          className="mt-1 h-4 w-4 rounded border-neutral-sand text-[#dcae76] focus:ring-[#dcae76]/50 cursor-pointer"
-                        />
-                        <label htmlFor="wants-updates-home" className="text-xs text-charcoal-body font-medium select-none cursor-pointer">
-                          I would like to receive preliminary launch packets, rent updates, and application opening dates by email.
-                        </label>
-                      </div>
-                    </div>
-                  )}
+      {/* 2. Welcome Banner Section */}
+      <section id="welcome" className="bg-[#fcfbf7] border-y border-[#c5a880]/15 py-12 text-center px-6">
+        <div className="max-w-2xl mx-auto flex flex-col items-center">
+          <span className="text-[10px] tracking-[0.3em] text-[#c5a880] uppercase font-sans font-semibold mb-3">
+            A NEW STANDARD FOR MODERN LIVING
+          </span>
+          <div className="w-12 h-[1px] bg-[#c5a880]/40 mb-4" />
+          <p className="font-display font-light text-charcoal-dark text-base sm:text-lg tracking-[0.05em] leading-relaxed uppercase">
+            64 Brand-New Residences Soaring in the heart of Honolulu
+          </p>
+        </div>
+      </section>
 
-                  {step === 5 && (
-                    <div className="animate-fade-in">
-                      <div className="w-14 h-14 rounded-full bg-[#dcae76]/10 flex items-center justify-center text-[#dcae76] mx-auto mb-6">
-                        <Mail className="w-6 h-6" />
-                      </div>
-                      <h3 className="text-2xl sm:text-3xl font-serif font-semibold text-charcoal-dark text-center mb-2">
-                        Contact Information
-                      </h3>
-                      <p className="text-sm text-charcoal-muted text-center mb-6">Complete your details to view your preliminary qualification result.</p>
-                      
-                      {errorMessage && (
-                        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-lg flex items-center gap-2">
-                          <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                          <span>{errorMessage}</span>
-                        </div>
-                      )}
-
-                      <div className="grid grid-cols-2 gap-3 mb-3">
-                        <div>
-                          <label htmlFor="first-name-home" className="block text-[10px] font-semibold text-charcoal-dark uppercase tracking-wider mb-1">
-                            First Name
-                          </label>
-                          <input
-                            id="first-name-home"
-                            type="text"
-                            required
-                            value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
-                            className="w-full px-3.5 py-2.5 border border-neutral-sand/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/40 bg-white text-sm"
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="last-name-home" className="block text-[10px] font-semibold text-charcoal-dark uppercase tracking-wider mb-1">
-                            Last Name
-                          </label>
-                          <input
-                            id="last-name-home"
-                            type="text"
-                            required
-                            value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                            className="w-full px-3.5 py-2.5 border border-neutral-sand/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/40 bg-white text-sm"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-3 mb-4">
-                        <div>
-                          <label htmlFor="email-home" className="block text-[10px] font-semibold text-charcoal-dark uppercase tracking-wider mb-1">
-                            Email
-                          </label>
-                          <input
-                            id="email-home"
-                            type="email"
-                            required
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-3.5 py-2.5 border border-neutral-sand/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/40 bg-white text-sm"
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="phone-home" className="block text-[10px] font-semibold text-charcoal-dark uppercase tracking-wider mb-1">
-                            Phone
-                          </label>
-                          <input
-                            id="phone-home"
-                            type="tel"
-                            required
-                            placeholder="(808) 555-0199"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                            className="w-full px-3.5 py-2.5 border border-neutral-sand/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/40 bg-white text-sm"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-2.5 p-3.5 bg-white border border-neutral-sand/20 rounded-xl mb-4">
-                        <input
-                          id="consent-checkbox-home"
-                          type="checkbox"
-                          required
-                          checked={consent}
-                          onChange={(e) => setConsent(e.target.checked)}
-                          className="mt-0.5 h-4 w-4 rounded border-neutral-sand text-[#dcae76] focus:ring-[#dcae76]/50 cursor-pointer"
-                        />
-                        <label htmlFor="consent-checkbox-home" className="text-[10px] text-charcoal-body leading-relaxed select-none cursor-pointer">
-                          I consent to being contacted by Associated Real Estate Advisors regarding this preliminary check.
-                        </label>
-                      </div>
-                    </div>
-                  )}
-
-                  {step === 6 && assessment && (
-                    <div className="animate-fade-in py-6 flex flex-col items-center justify-center text-center w-full max-w-xl mx-auto">
-                      
-                      {/* Modern Elegant Path Badge */}
-                      <div className={`px-5 py-2 rounded-full border text-xs font-semibold tracking-wider uppercase mb-6 shadow-xs ${
-                        assessment.result === 'likely_fit'
-                          ? 'bg-green-50/55 border-green-200 text-green-700'
-                          : assessment.result === 'needs_review'
-                          ? 'bg-amber-50/55 border-amber-200 text-amber-700'
-                          : assessment.result === 'under_qualified'
-                          ? 'bg-blue-50/55 border-blue-200 text-blue-700'
-                          : 'bg-[#dcae76]/10 border-[#dcae76]/35 text-[#cda26b]'
-                      }`}>
-                        {assessment.result === 'likely_fit' && 'Standard Program Path'}
-                        {assessment.result === 'needs_review' && 'Priority Review Path'}
-                        {assessment.result === 'under_qualified' && 'Alternative Resources Path'}
-                        {assessment.result === 'outside_range' && 'Premium & Expanded Path'}
-                      </div>
-                      
-                      {/* Bold Status Heading */}
-                      <h3 className="text-2xl sm:text-3xl font-display font-bold text-charcoal-dark mb-4 tracking-tight">
-                        {assessment.result === 'likely_fit' && 'Pre-Qualification Confirmed'}
-                        {assessment.result === 'needs_review' && 'Priority Review Queued'}
-                        {assessment.result === 'under_qualified' && 'Alternative Guidance Active'}
-                        {assessment.result === 'outside_range' && 'Premium Placement Active'}
-                      </h3>
-
-                      {/* Effortless Advisor Notes (Clean Sans-Serif Font, Increased Line Height, Readable Sizes) */}
-                      <div className="text-charcoal-body text-sm sm:text-base leading-relaxed mb-8 max-w-md bg-white border border-neutral-sand/20 rounded-2xl p-6 shadow-xs w-full text-center">
-                        {assessment.result === 'likely_fit' && (
-                          <p>
-                            Aloha {firstName}, your profile aligns with workforce housing guidelines. We&apos;ve sent your document checklist by email. An advisor will contact you at <strong className="text-charcoal-dark">{phone}</strong> soon.
-                          </p>
-                        )}
-                        {assessment.result === 'needs_review' && (
-                          <p>
-                            Aloha {firstName}, your profile is close to guidelines. We have queued your details. An advisor will call you at <strong className="text-charcoal-dark">{phone}</strong> to guide you and discuss manual verification.
-                          </p>
-                        )}
-                        {assessment.result === 'under_qualified' && (
-                          <p>
-                            Aloha {firstName}, your estimated household income is below the workforce rent thresholds. We have unlocked local rental support and community resources for you below.
-                          </p>
-                        )}
-                        {assessment.result === 'outside_range' && (
-                          <p>
-                            Aloha {firstName}, your income exceeds workforce guidelines. We have unlocked premium market-rate showcases and partner listings for you below.
-                          </p>
-                        )}
-                      </div>
-
-                      {/* One Click Transfer Card - Keep it simple, minimalist, and high contrast */}
-                      {(assessment.result === 'outside_range' || moveTiming === 'immediate') && (
-                        <div className="w-full p-6 rounded-2xl border border-[#dcae76]/25 bg-[#dcae76]/5 text-center shadow-xs">
-                          <div className="flex flex-col items-center gap-3">
-                            <FileCheck className="w-6 h-6 text-[#cda26b]" />
-                            <div>
-                              <h4 className="font-semibold text-charcoal-dark text-sm uppercase tracking-wider mb-1">
-                                {assessment.result === 'outside_range' ? 'One-Click Premium Transfer' : 'Immediate Placement Transfer'}
-                              </h4>
-                              <p className="text-xs text-charcoal-muted leading-normal max-w-sm mx-auto mb-4">
-                                {assessment.result === 'outside_range' 
-                                  ? 'Match with premium partner properties (like Sky Ala Moana) instantly without re-applying.'
-                                  : 'Match with partner workforce properties that have immediate vacancies instantly without re-applying.'}
-                              </p>
-                              
-                              {transferAuthorized ? (
-                                <div className="text-xs text-green-700 font-bold bg-green-50 border border-green-200 rounded-lg py-2 px-4 flex items-center justify-center gap-1.5 animate-fade-in">
-                                  <CheckCircle2 className="w-4 h-4" />
-                                  Portfolio Match Enabled!
-                                </div>
-                              ) : (
-                                <button
-                                  type="button"
-                                  onClick={handleTransferAuthorize}
-                                  disabled={transferLoading}
-                                  className="px-6 py-3.5 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-xs rounded-xl tracking-wider transition-all focus:outline-none shadow-xs"
-                                >
-                                  {transferLoading ? 'Enabling...' : 'Enable Portfolio Match'}
-                                </button>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                    </div>
-                  )}
-
-                </div>
-
-                {/* Footer Controls */}
-                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 pt-5 border-t border-neutral-sand/25">
-                  <div className="flex items-center gap-2 text-xs text-charcoal-muted">
-                    <Shield className="w-3.5 h-3.5 text-[#dcae76]" />
-                    <span>Your information is secure and private.</span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    {step > 1 && step < 6 && (
-                      <button
-                        type="button"
-                        onClick={handleBack}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-charcoal-muted hover:text-[#dcae76] transition-colors focus:outline-none"
-                      >
-                        <ArrowLeft className="w-3.5 h-3.5" />
-                        Back
-                      </button>
-                    )}
-
-                    {step < 5 ? (
-                      <button
-                        type="button"
-                        onClick={handleNext}
-                        disabled={!canGoNext()}
-                        className="inline-flex items-center gap-1.5 px-6 py-3 rounded-lg bg-[#dcae76] disabled:bg-neutral-sand/40 disabled:text-charcoal-muted/50 disabled:cursor-not-allowed hover:bg-[#cda26b] text-[#1c1a17] text-xs font-semibold tracking-wide transition-all shadow-md focus:outline-none"
-                      >
-                        Continue
-                        <ArrowRight className="w-3.5 h-3.5" />
-                      </button>
-                    ) : step === 5 ? (
-                      <button
-                        type="button"
-                        onClick={handleSubmit}
-                        disabled={!canGoNext() || loading}
-                        className="inline-flex items-center gap-1.5 px-6 py-3 rounded-lg bg-[#dcae76] disabled:bg-neutral-sand/40 disabled:text-charcoal-muted/50 disabled:cursor-not-allowed hover:bg-[#cda26b] text-[#1c1a17] text-xs font-semibold tracking-wide transition-all shadow-md focus:outline-none"
-                      >
-                        {loading ? 'Submitting...' : 'See Results'}
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setStep(1);
-                          setHouseholdSize(null);
-                          setDesiredUnitType('');
-                          setAnnualIncome('');
-                          setMoveTiming('');
-                          setFirstName('');
-                          setLastName('');
-                          setEmail('');
-                          setPhone('');
-                          setConsent(false);
-                          setAssessment(null);
-                          setTransferAuthorized(false);
-                          if (typeof window !== 'undefined') {
-                            localStorage.removeItem('amana_screener_assessment');
-                            localStorage.removeItem('amana_screener_first_name');
-                            localStorage.removeItem('amana_screener_phone');
-                            localStorage.removeItem('amana_screener_lead_id');
-                            localStorage.removeItem('amana_screener_transfer_authorized');
-                          }
-                        }}
-                        className="inline-flex items-center gap-1 px-5 py-2.5 rounded-lg border border-neutral-sand text-charcoal-body text-xs font-semibold hover:bg-neutral-linen/25 transition-all focus:outline-none"
-                      >
-                        Restart Screener
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-              </div>
-            </div>
+      {/* 3. Section 1: The Residences (Image Right / Text Left) */}
+      <section id="residences" className="py-20 md:py-32 px-6 md:px-12 bg-[#fdfcf7]">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20 items-center">
+          <div className="md:col-span-5 flex flex-col justify-center">
+            <span className="text-[10px] tracking-[0.3em] text-[#c5a880] uppercase font-sans font-light mb-2">
+              Modern Spaces
+            </span>
+            <h2 className="text-3xl md:text-5xl font-light tracking-[0.2em] text-[#121314] uppercase mb-8 font-display">
+              The Residences
+            </h2>
+            <div className="w-16 h-[1px] bg-[#c5a880] mb-8" />
+            <p className="text-charcoal-muted leading-relaxed font-sans text-sm md:text-base font-light">
+              Abundant natural light. Panoramic city, mountain, and sunset views. Contemporary interior finishes and expansive windows. Welcome to your residence at Amana Lofts, soaring above the dynamic Ala Moana and Kapiolani Corridor.
+            </p>
+          </div>
+          <div className="md:col-span-7 relative h-[300px] sm:h-[450px] w-full overflow-hidden border border-[#c5a880]/10">
+            <Image
+              src="/images/3.jpg"
+              alt="Amana Lofts Residence Interior"
+              fill
+              className="object-cover"
+              sizes="(max-w-768px) 100vw, 50vw"
+              priority
+            />
           </div>
         </div>
       </section>
 
+      {/* 4. Section 2: The Terrace (Full-bleed Parallax Image) */}
+      <section id="building" className="relative min-h-[75vh] flex items-center justify-center bg-black overflow-hidden">
+        {/* Parallax Background */}
+        <div className="absolute inset-0 z-0">
+          <div 
+            className="w-full h-full bg-cover bg-center bg-no-repeat opacity-85 bg-fixed"
+            style={{ backgroundImage: `url('/images/back.jpg')` }}
+          />
+          {/* Parallax overlay */}
+          <div className="absolute inset-0 bg-[#121314]/40" />
+        </div>
 
+        {/* Text content over Parallax */}
+        <div className="relative z-10 max-w-3xl px-8 text-center text-white py-16">
+          <span className="text-[10px] tracking-[0.3em] text-[#e0ceb6] uppercase font-sans font-light mb-3 block">
+            Community Sanctuary
+          </span>
+          <h2 className="text-3xl md:text-5xl font-light tracking-[0.2em] text-white uppercase mb-8 font-display">
+            The Terrace
+          </h2>
+          <div className="w-16 h-[1px] bg-[#c5a880] mx-auto mb-8" />
+          <p className="text-[#f4efeb] leading-relaxed font-sans text-sm md:text-base font-light max-w-xl mx-auto">
+            From resident gathering areas to shared everyday conveniences, Amana Lofts offers beautiful urban spaces designed to elevate the daily lives of local professionals.
+          </p>
+        </div>
+      </section>
 
-
-      {/* Units Section - Show only for Standard Path */}
-      {step === 6 && assessment && assessment.result === 'likely_fit' && (
-        <section id="units" className="py-20 sm:py-28 bg-neutral-linen/35 border-t border-b border-neutral-sand/15 animate-fade-in">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center mb-16 max-w-2xl mx-auto">
-              <h2 className="text-3xl sm:text-4xl font-display font-semibold text-charcoal-dark mb-4">
-                Apartment Floor Plans
-              </h2>
-              <p className="text-charcoal-muted mb-3">
-                Explore our range of 64 income-qualified rental units tailored to meet various household needs.
-              </p>
-              <span className="inline-block px-3 py-1 bg-brand-gold/10 border border-brand-gold/20 text-[#cda26b] text-xs font-semibold rounded-full uppercase tracking-wider">
-                64 Total Residences
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-              {units.map((unit, idx) => {
-                const imageUrl = unit.type === 'Studio' 
-                  ? '/images/amana_studio.png' 
-                  : unit.type === 'One Bedroom' 
-                  ? '/images/amana_one_bedroom.png' 
-                  : '/images/amana_two_bedroom.png';
-                return (
-                  <div key={idx} className="bg-white border border-neutral-sand/25 shadow-md rounded-2xl overflow-hidden flex flex-col justify-between group">
-                    <div>
-                      {/* Top Image Render */}
-                      <div className="relative w-full aspect-[4/3] bg-neutral-sand/10 overflow-hidden">
-                        <Image
-                          src={imageUrl}
-                          alt={`${unit.type} Floor Plan`}
-                          fill
-                          className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                        />
-                      </div>
-                      
-                      <div className="p-8 pb-0">
-                        <div className="flex justify-between items-start mb-6">
-                          <h3 className="text-2xl font-display font-semibold text-charcoal-dark">{unit.type}</h3>
-                          <span className="px-2.5 py-1 text-xs font-semibold bg-neutral-linen text-charcoal-muted rounded-full">
-                            {unit.count}
-                          </span>
-                        </div>
-                        
-                        <div className="space-y-4 mb-8">
-                          <div className="flex justify-between text-sm py-2 border-b border-neutral-sand/10">
-                            <span className="text-charcoal-muted">Estimated Area</span>
-                            <span className="font-semibold text-charcoal-dark">{unit.size}</span>
-                          </div>
-                          <div className="flex justify-between text-sm py-2 border-b border-neutral-sand/10">
-                            <span className="text-charcoal-muted">Monthly Rent</span>
-                            <span className="font-semibold text-[#cda26b]">{unit.rent}</span>
-                          </div>
-                          <div className="flex justify-between text-sm py-2 border-b border-neutral-sand/10">
-                            <span className="text-charcoal-muted">Lease Term</span>
-                            <span className="font-semibold text-charcoal-dark">{unit.term}</span>
-                          </div>
-                          <div className="flex justify-between text-sm py-2 border-b border-neutral-sand/10">
-                            <span className="text-charcoal-muted">Occupancy Limit</span>
-                            <span className="font-semibold text-charcoal-dark">{unit.occupancy}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="px-8 pb-8">
-                      <Link
-                        href="#how-it-works"
-                        className="w-full block text-center py-3.5 bg-neutral-ivory hover:bg-[#dcae76] hover:text-[#1c1a17] border border-neutral-sand text-charcoal-body text-sm font-semibold rounded-xl transition-all focus:outline-none"
-                      >
-                        View Leasing Process
-                      </Link>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="max-w-2xl mx-auto text-center bg-white p-5 rounded-xl border border-neutral-sand/25 text-xs text-charcoal-muted leading-relaxed shadow-sm">
-              <strong>Notice:</strong> Final rents, availability, and application timing will be published when approved. Rents and income qualification thresholds are subject to change based on municipal regulatory review.
-            </div>
-
+      {/* 5. Section 3: Design (Image Left / Text Right) */}
+      <section id="design" className="py-20 md:py-32 px-6 md:px-12 bg-[#fdfcf7]">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20 items-center">
+          <div className="md:col-span-7 order-last md:order-first relative h-[300px] sm:h-[450px] w-full overflow-hidden border border-[#c5a880]/10">
+            <Image
+              src="/images/1.jpg"
+              alt="Amana Lofts High Ceilings Interior"
+              fill
+              className="object-cover"
+              sizes="(max-w-768px) 100vw, 50vw"
+            />
           </div>
-        </section>
-      )}
-
-      {/* Alternative Housing Resources - Show for Under-qualified Path */}
-      {step === 6 && assessment && assessment.result === 'under_qualified' && (
-        <section className="py-20 sm:py-28 bg-neutral-linen/35 border-t border-b border-neutral-sand/15 animate-fade-in">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center mb-16 max-w-2xl mx-auto">
-              <h2 className="text-3xl sm:text-4xl font-display font-semibold text-charcoal-dark mb-4">
-                Community Housing Resources
-              </h2>
-              <p className="text-charcoal-muted mb-3">
-                Since your income range falls below our workforce affordable thresholds, we recommend exploring these local assistance and rental subsidy programs.
-              </p>
-              <span className="inline-block px-3 py-1 bg-brand-gold/10 border border-brand-gold/20 text-[#cda26b] text-xs font-semibold rounded-full uppercase tracking-wider">
-                Support Options Available
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {/* Honolulu County Section 8 */}
-              <div className="bg-white border border-neutral-sand/25 shadow-md rounded-2xl overflow-hidden flex flex-col justify-between group">
-                <div>
-                  <div className="relative w-full aspect-[16/10] bg-neutral-sand/10 overflow-hidden">
-                    <Image
-                      src="/images/county_support.png"
-                      alt="County Support Program"
-                      fill
-                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                    />
-                  </div>
-                  
-                  <div className="p-8">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-2xl font-display font-semibold text-charcoal-dark">Hawaii Public Housing Authority</h3>
-                      <span className="px-2.5 py-1 text-[10px] font-semibold bg-green-50 text-green-700 border border-green-200 rounded-full uppercase">
-                        Active Subsidies
-                      </span>
-                    </div>
-                    
-                    <p className="text-sm text-charcoal-muted leading-relaxed mb-6">
-                      Instead of waiting on closed county lists, the HPHA frequently updates open waitlists for Low-Income Housing Tax Credit (LIHTC) properties and active state subsidized vacancies across Honolulu.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="px-8 pb-8">
-                  <a
-                    href="https://www.hpha.hawaii.gov/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full block text-center py-3.5 bg-neutral-ivory hover:bg-[#dcae76] hover:text-[#1c1a17] border border-neutral-sand text-charcoal-body text-sm font-semibold rounded-xl transition-all focus:outline-none"
-                  >
-                    View Active State Waitlists &rarr;
-                  </a>
-                </div>
-              </div>
-
-              {/* AUW 2-1-1 */}
-              <div className="bg-white border border-neutral-sand/25 shadow-md rounded-2xl overflow-hidden flex flex-col justify-between group">
-                <div>
-                  <div className="relative w-full aspect-[16/10] bg-neutral-sand/10 overflow-hidden">
-                    <Image
-                      src="/images/housing_assistance.png"
-                      alt="Housing Assistance Help"
-                      fill
-                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                    />
-                  </div>
-                  
-                  <div className="p-8">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-2xl font-display font-semibold text-charcoal-dark">Aloha United Way 2-1-1</h3>
-                      <span className="px-2.5 py-1 text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200 rounded-full uppercase">
-                        Community Helpline
-                      </span>
-                    </div>
-                    
-                    <p className="text-sm text-charcoal-muted leading-relaxed mb-6">
-                      AUW 2-1-1 is Hawaii&apos;s only comprehensive community helpline. Connect with local specialists to find emergency financial assistance, food services, rent support, utility help, and transitional shelter.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="px-8 pb-8">
-                  <a
-                    href="https://www.auw211.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full block text-center py-3.5 bg-neutral-ivory hover:bg-[#dcae76] hover:text-[#1c1a17] border border-neutral-sand text-charcoal-body text-sm font-semibold rounded-xl transition-all focus:outline-none"
-                  >
-                    Connect to AUW 2-1-1 &rarr;
-                  </a>
-                </div>
-              </div>
-            </div>
-
+          <div className="md:col-span-5 flex flex-col justify-center">
+            <span className="text-[10px] tracking-[0.3em] text-[#c5a880] uppercase font-sans font-light mb-2">
+              Curated Style
+            </span>
+            <h2 className="text-3xl md:text-5xl font-light tracking-[0.2em] text-[#121314] uppercase mb-8 font-display">
+              Design
+            </h2>
+            <div className="w-16 h-[1px] bg-[#c5a880] mb-8" />
+            <p className="text-charcoal-muted leading-relaxed font-sans text-sm md:text-base font-light">
+              Based on proven urban design principles, Amana Lofts features high-volume ceilings, modern kitchens, clean cabinetry, and highly functional layouts. It represents a fusion of intelligent planning and contemporary styling.
+            </p>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
-      {/* Premium Residences Showcase - Show for Over-qualified Path */}
-      {step === 6 && assessment && assessment.result === 'outside_range' && (
-        <section className="py-20 sm:py-28 bg-neutral-linen/35 border-t border-b border-neutral-sand/15 animate-fade-in">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="text-center mb-16 max-w-2xl mx-auto">
-              <h2 className="text-3xl sm:text-4xl font-display font-semibold text-charcoal-dark mb-4">
-                Premium Residences Showcase
-              </h2>
-              <p className="text-charcoal-muted mb-3">
-                Since your income range exceeds the workforce housing program caps, we recommend checking these premium market-rate offerings in our Honolulu portfolio.
-              </p>
-              <span className="inline-block px-3 py-1 bg-brand-gold/10 border border-brand-gold/20 text-[#cda26b] text-xs font-semibold rounded-full uppercase tracking-wider">
-                Market-Rate Options
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {/* Sky Ala Moana */}
-              <div className="bg-white border border-neutral-sand/25 shadow-md rounded-2xl overflow-hidden flex flex-col justify-between group">
-                <div>
-                  <div className="relative w-full aspect-[16/10] bg-neutral-sand/10 overflow-hidden">
-                    <Image
-                      src="/images/sky_ala_moana.png"
-                      alt="Sky Ala Moana Premium Condominium"
-                      fill
-                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                    />
-                  </div>
-                  
-                  <div className="p-8">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-2xl font-display font-semibold text-charcoal-dark">The Flats at Sky Ala Moana</h3>
-                      <span className="px-2.5 py-1 text-[10px] font-semibold bg-brand-gold/10 text-[#cda26b] border border-brand-gold/20 rounded-full uppercase tracking-wider">
-                        Premium High-Rise
-                      </span>
-                    </div>
-                    
-                    <p className="text-sm text-charcoal-muted leading-relaxed mb-6">
-                      Located right next door, Sky Ala Moana features upscale studio, one-bedroom, and two-bedroom residences. Enjoy resort-style amenities including an expansive pool deck, fitness center, spas, and cabanas.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="px-8 pb-8">
-                  <a
-                    href="https://skyalamoana.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full block text-center py-3.5 bg-neutral-ivory hover:bg-[#dcae76] hover:text-[#1c1a17] border border-neutral-sand text-charcoal-body text-sm font-semibold rounded-xl transition-all focus:outline-none"
-                  >
-                    Explore Sky Ala Moana &rarr;
-                  </a>
-                </div>
-              </div>
-
-              {/* Amana Lofts Penthouses */}
-              <div className="bg-white border border-neutral-sand/25 shadow-md rounded-2xl overflow-hidden flex flex-col justify-between group">
-                <div>
-                  <div className="relative w-full aspect-[16/10] bg-neutral-sand/10 overflow-hidden">
-                    <Image
-                      src="/images/amana_penthouse.png"
-                      alt="Amana Lofts Penthouse Collection"
-                      fill
-                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                    />
-                  </div>
-                  
-                  <div className="p-8">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-2xl font-display font-semibold text-charcoal-dark">Amana Loft Penthouses</h3>
-                      <span className="px-2.5 py-1 text-[10px] font-semibold bg-brand-gold/10 text-[#cda26b] border border-brand-gold/20 rounded-full uppercase tracking-wider">
-                        Market Rate
-                      </span>
-                    </div>
-                    
-                    <p className="text-sm text-charcoal-muted leading-relaxed mb-6">
-                      A select collection of premier, top-floor market-rate penthouses within Amana Lofts. Featuring upgraded appliances, expansive city and ocean views, and soaring 12-foot vertical volumes.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="px-8 pb-8">
-                  <a
-                    href="mailto:sales@amanalofts.com?subject=Penthouse Inquiry"
-                    className="w-full block text-center py-3.5 bg-neutral-ivory hover:bg-[#dcae76] hover:text-[#1c1a17] border border-neutral-sand text-charcoal-body text-sm font-semibold rounded-xl transition-all focus:outline-none"
-                  >
-                    Request Callback for Penthouses &rarr;
-                  </a>
-                </div>
-              </div>
-            </div>
-
+      {/* 6. Section 4: Location (Image Right / Text Left) */}
+      <section id="location" className="py-20 md:py-32 px-6 md:px-12 bg-[#fcfbf7] border-t border-[#c5a880]/10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20 items-center">
+          <div className="md:col-span-5 flex flex-col justify-center">
+            <span className="text-[10px] tracking-[0.3em] text-[#c5a880] uppercase font-sans font-light mb-2">
+              Honolulu Retail Hub
+            </span>
+            <h2 className="text-3xl md:text-5xl font-light tracking-[0.2em] text-[#121314] uppercase mb-8 font-display">
+              Location
+            </h2>
+            <div className="w-16 h-[1px] bg-[#c5a880] mb-8" />
+            <p className="text-charcoal-muted leading-relaxed font-sans text-sm md:text-base font-light">
+              Living at 765 Amana Street puts you minutes from Ala Moana Center, local restaurants, supermarkets, and parks. Located along reef-protected sandy beaches and surf breaks, it is the perfect gathering place for work and play.
+            </p>
           </div>
-        </section>
-      )}
+          <div className="md:col-span-7 relative h-[300px] sm:h-[450px] w-full overflow-hidden border border-[#c5a880]/10">
+            <Image
+              src="/images/2.jpg"
+              alt="Amana Lofts Location Area"
+              fill
+              className="object-cover"
+              sizes="(max-w-768px) 100vw, 50vw"
+            />
+          </div>
+        </div>
+      </section>
 
-      {/* Location Map Section - Show only for Standard and Priority Paths */}
-      {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section 
-          id="location" 
-          className="relative py-28 bg-cover bg-center animate-fade-in z-10 border-b border-neutral-sand/15 overflow-hidden"
-          style={{ backgroundImage: "url('/images/ala_moana_aerial_map.jpg')" }}
-        >
-          {/* Dark Overlay for Legibility */}
-          <div className="absolute inset-0 bg-charcoal-dark/55 z-0" />
+      {/* 7. Section 5: Inquire (Contact Inquiry Form) */}
+      <section id="inquire" className="bg-[#121314] text-white py-24 px-6 md:px-12 border-t border-[#c5a880]/15 relative overflow-hidden">
+        {/* Subtle background monogram layout watermark */}
+        <div className="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 w-96 h-96 border border-[#c5a880]/5 rounded-none pointer-events-none flex items-center justify-center">
+          <span className="font-display text-9xl text-white/5 font-extralight select-none">A</span>
+        </div>
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+        <div className="max-w-4xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <span className="text-[10px] tracking-[0.3em] text-[#c5a880] uppercase font-sans font-medium mb-3 block">
+              Join the Launch Update List
+            </span>
+            <h2 className="text-3xl md:text-4xl font-light tracking-[0.25em] text-white uppercase font-display">
+              Inquire
+            </h2>
+            <div className="w-12 h-[1px] bg-[#c5a880]/50 mx-auto mt-6" />
+          </div>
+
+          {success ? (
+            <div className="max-w-md mx-auto text-center py-12 px-6 border border-[#c5a880]/20 bg-[#1c1e21]/40 backdrop-blur-sm">
+              <CheckCircle2 className="w-12 h-12 text-[#c5a880] mx-auto mb-4 animate-scale-up" />
+              <h3 className="text-xl font-display font-light text-white tracking-[0.1em] mb-2">Registration Complete</h3>
+              <p className="text-[#8e9499] text-sm font-sans font-light leading-relaxed">
+                Thank you for your interest in Amana Lofts. We have recorded your registration and will contact you as launch details and eligibility guidelines are published.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={handleInquirySubmit} className="max-w-2xl mx-auto space-y-8">
               
-              {/* Left Column: Heading, description, and maps button */}
-              <div className="lg:col-span-5 space-y-6">
-                <div className="inline-flex p-3 bg-white/10 rounded-2xl text-[#dcae76] border border-white/10">
-                  <MapPin className="w-6 h-6" />
+              {errorMsg && (
+                <div className="p-4 bg-red-950/30 border border-red-500/20 text-red-200 text-sm font-sans text-center">
+                  {errorMsg}
                 </div>
-                <h2 
-                  className="text-3xl sm:text-4xl font-serif font-light tracking-wide leading-tight"
-                  style={{ color: 'white' }}
-                >
-                  Everything Ala Moana Has to Offer
-                </h2>
-                <p className="text-neutral-sand/90 leading-relaxed text-sm sm:text-base">
-                  Located at 765 Amana Street, Amana Lofts places you at the center of Honolulu&apos;s most walkable and transit-friendly district. Walk to grocery stores, beaches, shopping center terminals, and primary employment zones.
-                </p>
-                <div className="pt-2">
-                  <a
-                    href="https://maps.google.com/?q=765+Amana+Street+Honolulu+HI+96814"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-xs rounded-xl tracking-wider uppercase transition-all focus:outline-none shadow-md"
-                  >
-                    Open in Google Maps
-                    <ArrowUpRight className="w-4 h-4" />
-                  </a>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                {/* First Name */}
+                <div className="flex flex-col">
+                  <label className="text-[10px] tracking-[0.2em] text-[#8e9499] uppercase font-sans font-light mb-2">
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                    className="bg-transparent border-b border-neutral-700/60 focus:border-[#c5a880] py-2 text-white font-sans text-sm tracking-[0.05em] font-light outline-none transition-colors"
+                  />
                 </div>
-              </div>
 
-              {/* Right Column: Glassmorphic Grid of Landmarks */}
-              <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {landmarks.map((lm, idx) => (
-                  <div 
-                    key={idx} 
-                    className="flex justify-between items-center p-5 bg-[#1c1a17]/65 backdrop-blur-md border border-white/10 rounded-2xl hover:bg-[#1c1a17]/85 hover:border-[#dcae76]/50 transition-all duration-300 group shadow-md"
-                  >
-                    <div>
-                      <span className="block font-semibold text-white text-sm">{lm.name}</span>
-                      <span className="block text-xs font-semibold text-[#dcae76] mt-0.5">{lm.distance}</span>
-                    </div>
-                    <span className="text-xs font-semibold text-white whitespace-nowrap bg-white/10 border border-white/10 px-3 py-1.5 rounded-lg group-hover:bg-[#dcae76] group-hover:text-[#1c1a17] transition-all duration-300">
-                      {lm.time}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* How It Works Section - Show for Standard and Priority Paths */}
-      {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="how-it-works" className="py-28 bg-[#f4f0ea] animate-fade-in relative z-10 border-b border-neutral-sand/15">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16 max-w-3xl mx-auto">
-              <span className="text-xs font-semibold text-[#cda26b] uppercase tracking-widest block mb-2">Leasing Steps</span>
-              <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark tracking-wide leading-tight mb-4">
-                How It Works
-              </h2>
-              <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
-                Follow our 6-step compliance process to secure your loft.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[
-                { step: "01", title: "Verify Income", desc: "Verify income guidelines.", img: "/images/verify_income.png" },
-                { step: "02", title: "Join List", desc: "Get launch date notifications.", img: "/images/join_list.png" },
-                { step: "03", title: "Prepare Documents", desc: "Collect paystubs & tax files.", img: "/images/prepare_documents.png" },
-                { step: "04", title: "Submit Application", desc: "Submit file when window opens.", img: "/images/submit_application.png" },
-                { step: "05", title: "Compliance Review", desc: "Verification of your assets.", img: "/images/compliance_review.png" },
-                { step: "06", title: "Final Placement", desc: "Sign lease & secure loft.", img: "/images/final_placement.png" }
-              ].map((item, idx) => (
-                <div key={idx} className="bg-white border border-neutral-sand/25 shadow-md rounded-2xl overflow-hidden flex flex-col justify-between group">
-                  <div className="relative w-full aspect-[16/10] bg-neutral-sand/10 overflow-hidden">
-                    <Image
-                      src={item.img}
-                      alt={item.title}
-                      fill
-                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="flex gap-3 items-center mb-2">
-                      <span className="text-xs font-serif font-bold text-[#cda26b] bg-[#dcae76]/10 px-2.5 py-1 rounded-md">
-                        {item.step}
-                      </span>
-                      <h3 className="text-base font-semibold text-charcoal-dark">{item.title}</h3>
-                    </div>
-                    <p className="text-xs text-charcoal-muted leading-relaxed">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Document Checklist Section - Show for Standard and Priority Paths */}
-      {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="checklist" className="py-28 bg-[#faf8f5] animate-fade-in relative z-10 border-b border-neutral-sand/15">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16 max-w-3xl mx-auto">
-              <span className="text-xs font-semibold text-[#cda26b] uppercase tracking-widest block mb-2">Verification</span>
-              <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark tracking-wide leading-tight mb-4">
-                Required Documents
-              </h2>
-              <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
-                Honolulu regulations require income certification. Prepare these four items:
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-              {[
-                { title: "Photo ID", desc: "Government photo ID.", img: "/images/photo_id.png" },
-                { title: "Paystubs", desc: "Last 2-3 months of stubs.", img: "/images/paystubs.png" },
-                { title: "Bank Statements", desc: "2 months of statements.", img: "/images/bank_statements.png" },
-                { title: "Tax Filings", desc: "Recent tax return & W-2.", img: "/images/tax_filings.png" }
-              ].map((doc, idx) => (
-                <div key={idx} className="bg-white border border-neutral-sand/25 shadow-md rounded-2xl overflow-hidden flex flex-col justify-between group">
-                  <div className="relative w-full aspect-square bg-neutral-sand/10 overflow-hidden">
-                    <Image
-                      src={doc.img}
-                      alt={doc.title}
-                      fill
-                      className="object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="text-base font-semibold text-charcoal-dark mb-1">{doc.title}</h3>
-                    <p className="text-xs text-charcoal-muted leading-relaxed">{doc.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex justify-center">
-              <div className="inline-flex items-center gap-3 bg-[#dcae76]/10 border border-[#dcae76]/20 rounded-xl px-5 py-3.5 shadow-sm">
-                <CheckCircle2 className="w-4 h-4 text-[#cda26b] flex-shrink-0" />
-                <span className="text-xs font-semibold text-charcoal-dark uppercase tracking-wider">A full checklist was sent to your email.</span>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* FAQ Section - Show only for Standard and Priority Paths */}
-      {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && (
-        <section id="faq" className="py-28 bg-[#f4f0ea] animate-fade-in relative z-10 border-b border-neutral-sand/15">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-              
-              {/* Left Column: Heading and Large Building Rendering */}
-              <div className="lg:col-span-5 lg:sticky lg:top-8 space-y-6">
-                <span className="text-xs font-semibold text-[#cda26b] uppercase tracking-widest block">Learn More</span>
-                <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark tracking-wide leading-tight">
-                  Frequently Asked Questions
-                </h2>
-                <p className="text-charcoal-muted leading-relaxed text-sm sm:text-base">
-                  Find answers on leasing and qualifications.
-                </p>
-                
-                {/* Large Exterior Rendering */}
-                <div className="relative w-full aspect-[4/3] rounded-[24px] overflow-hidden shadow-lg border border-neutral-sand/20">
-                  <Image
-                    src="/images/Exterior-of-planned-765-Amana-Street-project.webp"
-                    alt="Amana Lofts Planned Building Exterior Rendering"
-                    fill
-                    className="object-cover"
+                {/* Last Name */}
+                <div className="flex flex-col">
+                  <label className="text-[10px] tracking-[0.2em] text-[#8e9499] uppercase font-sans font-light mb-2">
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                    className="bg-transparent border-b border-neutral-700/60 focus:border-[#c5a880] py-2 text-white font-sans text-sm tracking-[0.05em] font-light outline-none transition-colors"
                   />
                 </div>
               </div>
 
-              {/* Right Column: Accordion Toggles */}
-              <div className="lg:col-span-7 space-y-4">
-                {faqData.map((faq, idx) => {
-                  const isOpen = openFaq === idx;
-                  return (
-                    <div key={idx} className="bg-white border border-neutral-sand/20 rounded-2xl overflow-hidden shadow-2xs transition-all duration-300">
-                      <button
-                        onClick={() => toggleFaq(idx)}
-                        className="w-full flex items-center justify-between p-5 text-left focus:outline-none hover:bg-neutral-linen/10 transition-colors"
-                      >
-                        <span className="font-semibold text-charcoal-dark text-sm sm:text-base pr-4">{faq.q}</span>
-                        <span className={`p-1.5 rounded-full transition-colors flex-shrink-0 ${isOpen ? 'bg-[#dcae76]/20 text-[#cda26b]' : 'bg-[#f5f0eb] text-charcoal-muted'}`}>
-                          {isOpen ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
-                        </span>
-                      </button>
-                      {isOpen && (
-                        <div className="px-5 pb-5 pt-1.5 text-xs sm:text-sm text-charcoal-muted border-t border-neutral-sand/10 leading-relaxed bg-[#fdfcfb]">
-                          {faq.a}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Launch Updates Capture Section - Show for Standard and Priority Paths */}
-      {step === 6 && assessment && (assessment.result === 'likely_fit' || assessment.result === 'needs_review') && !wantsUpdates && (
-        <section id="join-updates" className="py-28 bg-[#faf8f5] text-center animate-fade-in relative z-10 border-b border-neutral-sand/15">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
-            <div className="bg-white border border-neutral-sand/25 rounded-[32px] p-8 sm:p-12 shadow-lg">
-              <div className="inline-flex p-3 bg-[#dcae76]/10 rounded-2xl text-[#cda26b] mb-6 border border-[#dcae76]/20 shadow-xs">
-                <Bookmark className="w-5 h-5" />
-              </div>
-              <h2 className="text-3xl sm:text-4xl font-serif font-light text-charcoal-dark mb-4 leading-tight">
-                Join Amana Lofts Launch List
-              </h2>
-              <p className="text-charcoal-muted max-w-lg mx-auto mb-8 text-sm sm:text-base leading-relaxed">
-                Sign up to receive development updates, municipal assessment timelines, and leasing instructions directly in your inbox.
-              </p>
-
-              {updatesStatus === 'success' ? (
-                <div className="max-w-md mx-auto p-8 bg-green-50/10 border border-green-500/20 rounded-2xl">
-                  <Check className="w-8 h-8 text-green-600 mx-auto mb-4" />
-                  <h3 className="font-semibold text-green-800 text-lg mb-2">You&apos;re on the list!</h3>
-                  <p className="text-xs sm:text-sm text-green-700/80">
-                    Thank you for signing up. We will notify you when applications open or new guidelines are released.
-                  </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                {/* Email */}
+                <div className="flex flex-col">
+                  <label className="text-[10px] tracking-[0.2em] text-[#8e9499] uppercase font-sans font-light mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="bg-transparent border-b border-neutral-700/60 focus:border-[#c5a880] py-2 text-white font-sans text-sm tracking-[0.05em] font-light outline-none transition-colors"
+                  />
                 </div>
-              ) : (
-                <form onSubmit={handleUpdatesSubmit} className="max-w-lg mx-auto flex flex-col gap-4">
-                  {updatesStatus === 'error' && (
-                    <p className="text-sm text-red-600 bg-red-50 p-4 rounded-xl border border-red-500/20 mb-2">
-                      Failed to sign up. Please check your inputs or try again.
-                    </p>
-                  )}
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <input
-                      type="text"
-                      required
-                      placeholder="Your Name"
-                      value={updatesName}
-                      onChange={(e) => setUpdatesName(e.target.value)}
-                      disabled={updatesStatus === 'loading'}
-                      className="w-full px-5 py-3.5 border border-neutral-sand/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/30 focus:border-[#dcae76] text-sm bg-white text-charcoal-dark placeholder:text-charcoal-muted/50 transition-all"
-                    />
-                    <input
-                      type="email"
-                      required
-                      placeholder="Email Address"
-                      value={updatesEmail}
-                      onChange={(e) => setUpdatesEmail(e.target.value)}
-                      disabled={updatesStatus === 'loading'}
-                      className="w-full px-5 py-3.5 border border-neutral-sand/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#dcae76]/30 focus:border-[#dcae76] text-sm bg-white text-charcoal-dark placeholder:text-charcoal-muted/50 transition-all"
-                    />
-                  </div>
-                  
-                  <button
-                    type="submit"
-                    disabled={updatesStatus === 'loading'}
-                    className="w-full px-8 py-3.5 bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] rounded-xl text-sm font-semibold tracking-wider uppercase transition-all shadow-md focus:outline-none self-center mt-2"
-                  >
-                    {updatesStatus === 'loading' ? 'Joining...' : 'Subscribe to Updates'}
-                  </button>
-                  
-                  <p className="text-xs text-charcoal-muted leading-relaxed mt-4 max-w-md mx-auto">
-                    By joining, you agree to receive project emails. We value privacy and never share credentials. You can unsubscribe at any time.
-                  </p>
-                </form>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
 
-
-      {/* Footer Disclaimer/Credits */}
-      <footer className="bg-charcoal-dark text-neutral-sand/75 border-t border-neutral-sand/10 pt-16 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 border-b border-neutral-sand/10 pb-12 mb-10 text-left">
-            
-            <div className="md:col-span-5">
-              <h3 className="font-display font-bold text-2xl text-white tracking-wider mb-4">AMANA LOFTS</h3>
-              <p className="text-xs text-neutral-sand/65 leading-relaxed max-w-sm mb-4">
-                An income-qualified residential complex featuring 64 studio, one-bedroom, and two-bedroom rental options. Nestled in Ala Moana, Honolulu.
-              </p>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 text-white rounded-full text-xs font-semibold">
-                <Shield className="w-3.5 h-3.5 text-brand-gold" />
-                Equal Housing Opportunity
-              </span>
-            </div>
-
-            <div className="md:col-span-4 text-xs space-y-2">
-              <h4 className="font-semibold text-white text-xs uppercase tracking-wider mb-4">Location Details</h4>
-              <p className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-brand-gold flex-shrink-0 mt-0.5" />
-                <span>765 Amana Street, Honolulu, HI 96814</span>
-              </p>
-              <p className="pt-2 text-neutral-sand/55">
-                Developed by <strong>JL Capital</strong>
-              </p>
-              <p className="text-neutral-sand/55">
-                Represented/Managed by <strong>Associated Real Estate Advisors</strong>
-              </p>
-            </div>
-
-            <div className="md:col-span-3 text-xs space-y-4">
-              <h4 className="font-semibold text-white text-xs uppercase tracking-wider mb-0">Legal Information</h4>
-              <div className="flex flex-col gap-2">
-                <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-                <Link href="/disclaimer" className="hover:text-white transition-colors">Terms of Use & Disclaimers</Link>
+                {/* Phone */}
+                <div className="flex flex-col">
+                  <label className="text-[10px] tracking-[0.2em] text-[#8e9499] uppercase font-sans font-light mb-2">
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                    className="bg-transparent border-b border-neutral-700/60 focus:border-[#c5a880] py-2 text-white font-sans text-sm tracking-[0.05em] font-light outline-none transition-colors"
+                  />
+                </div>
               </div>
-            </div>
 
+              {/* Unit Type Selection */}
+              <div className="flex flex-col">
+                <label className="text-[10px] tracking-[0.2em] text-[#8e9499] uppercase font-sans font-light mb-2">
+                  Desired Residence Size
+                </label>
+                <div className="relative">
+                  <select
+                    value={unitType}
+                    onChange={(e) => setUnitType(e.target.value)}
+                    className="w-full bg-transparent border-b border-neutral-700/60 focus:border-[#c5a880] py-2 text-white font-sans text-sm tracking-[0.05em] font-light outline-none appearance-none rounded-none cursor-pointer transition-colors"
+                  >
+                    <option value="Studio" className="bg-[#121314] text-white">Studio</option>
+                    <option value="1-Bedroom" className="bg-[#121314] text-white">1-Bedroom</option>
+                    <option value="2-Bedroom" className="bg-[#121314] text-white">2-Bedroom</option>
+                  </select>
+                  <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-[#8e9499]">
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <div className="pt-6 text-center">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-12 py-3.5 border border-[#c5a880]/30 hover:border-[#c5a880] bg-transparent hover:bg-[#c5a880]/10 text-white hover:text-[#c5a880] text-xs font-light tracking-[0.25em] uppercase transition-all duration-300 rounded-none cursor-pointer focus:outline-none w-full sm:w-auto"
+                >
+                  {loading ? 'Registering...' : 'Submit Inquiry'}
+                </button>
+              </div>
+
+              <p className="text-[10px] text-center text-[#5c6166] font-sans font-light leading-relaxed max-w-md mx-auto pt-6">
+                By submitting this form, you consent to receive marketing updates from Amana Lofts and its authorized representatives. You may opt out at any time.
+              </p>
+            </form>
+          )}
+        </div>
+      </section>
+
+      {/* 8. Custom Footer */}
+      <footer className="bg-[#121314] text-[#8e9499] font-sans text-xs tracking-[0.15em] font-light uppercase py-16 px-6 md:px-12 border-t border-neutral-800/40 relative z-10">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-10">
+          {/* Address and contact */}
+          <div className="space-y-3">
+            <h6 className="text-white text-xs tracking-[0.2em] font-medium font-display">Amana Lofts</h6>
+            <p className="normal-case tracking-normal text-[#8e9499]">
+              765 Amana St<br />
+              Honolulu, HI 96814
+            </p>
           </div>
 
-          <div className="text-left text-xs text-neutral-sand/65 leading-relaxed space-y-4">
-            <p>
-              <strong>Compliance Statement:</strong> Amana Lofts does not discriminate on the basis of race, color, national origin, religion, sex, familial status, disability, sexual orientation, or gender identity. Preliminary screening metrics do not guarantee placement. Rental rates and qualifying parameters are subject to the official municipal guidelines for Honolulu County.
-            </p>
-            <p>
-              <strong>Regulatory Disclaimer:</strong> This website serves as a preliminary informational portal. Final rental approvals, document compliance verifications, lease signings, monthly rental costs, and availability dates are governed strictly by the approved program guidelines and administrative review.
-            </p>
-            <p className="text-center pt-8 border-t border-neutral-sand/5 text-neutral-sand/40">
-              &copy; {new Date().getFullYear()} Amana Lofts. All Rights Reserved.
-            </p>
+          {/* Legal Pages Links */}
+          <div className="flex gap-8 items-center">
+            <Link href="/disclaimer" className="hover:text-white transition-colors">
+              Disclaimer
+            </Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">
+              Privacy Policy
+            </Link>
           </div>
 
+          {/* Copyright, Developer info */}
+          <div className="space-y-2 text-left md:text-right">
+            <p className="normal-case tracking-normal">© 2026 JL Capital. All Rights Reserved.</p>
+            <p className="text-[10px] text-[#5c6166]">
+              Represented by Associated Real Estate Advisors
+            </p>
+          </div>
         </div>
       </footer>
 
