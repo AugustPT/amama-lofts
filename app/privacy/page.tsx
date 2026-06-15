@@ -13,9 +13,9 @@ export default function PrivacyPage() {
         Back to Home
       </Link>
 
-      <div className="bg-white border border-neutral-sand/30 shadow-md rounded-md p-6 sm:p-10">
+      <div className="bg-white border border-neutral-sand/25 shadow-md rounded-2xl p-6 sm:p-10">
         <div className="flex items-center gap-3 mb-6 pb-4 border-b border-neutral-sand/20">
-          <div className="p-3 bg-brand-gold/10 rounded-sm text-brand-gold">
+          <div className="p-3 bg-brand-gold/10 rounded-xl text-brand-gold">
             <Shield className="w-6 h-6" />
           </div>
           <div>

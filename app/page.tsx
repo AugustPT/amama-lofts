@@ -353,9 +353,9 @@ export default function HomePage() {
   return (
     <div className="flex-1">
       
-      {/* Hero Section with Fullscreen Background Video & Glass Card */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden border-b border-neutral-sand/20 bg-charcoal-dark z-0">
-        {/* Background Video */}
+      {/* Combined Hero & Screener Section */}
+      <section id="screener-section" className="relative min-h-[95vh] lg:min-h-screen flex flex-col justify-between overflow-hidden border-b border-neutral-sand/20 bg-charcoal-dark z-0 py-8 lg:py-12">
+        {/* Fullscreen Background Video */}
         <video 
           src="/videos/hero.mp4" 
           autoPlay 
@@ -364,139 +364,13 @@ export default function HomePage() {
           playsInline 
           className="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"
         />
-        {/* Soft Vignette Overlay to enhance contrast on the left side */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/20 to-transparent z-10 pointer-events-none" />
-        <div className="absolute inset-0 bg-black/15 z-10 pointer-events-none" />
+        {/* Soft Vignette Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/35 lg:to-black/20 z-10 pointer-events-none" />
         
-        {/* Content Container */}
-        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 min-h-[90vh] flex items-center justify-start w-full">
-          
-          <div className="w-full max-w-[450px] animate-slide-up">
-            {/* Glassmorphic Card */}
-            <div className="bg-[#1c1a17]/75 backdrop-blur-2xl border border-white/10 rounded-[32px] p-8 sm:p-12 flex flex-col items-center text-center shadow-2xl">
-              
-              {/* Gold double peaked logo */}
-              <svg className="w-16 h-16 text-[#dcae76] mb-4" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="4.5">
-                <path d="M20 80 L50 20 L80 80" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M35 80 L50 45 L65 80" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              
-              {/* Spaced logo text */}
-              <h2 className="text-[26px] font-sans font-light tracking-[0.25em] text-white leading-none">
-                AMANA
-              </h2>
-              <div className="flex items-center justify-center gap-1.5 mt-2.5 mb-8 text-[11px] font-semibold text-[#dcae76] tracking-[0.4em]">
-                <span className="w-4 h-[1px] bg-[#dcae76]/40" />
-                LOFTS
-                <span className="w-4 h-[1px] bg-[#dcae76]/40" />
-              </div>
-
-              {/* Title */}
-              <h1 className="text-3xl sm:text-4xl font-display font-medium text-white mb-4 leading-tight">
-                Modern Lofts.<br />Elevated Living.
-              </h1>
-
-              {/* Description */}
-              <p className="text-zinc-300 text-sm sm:text-base mb-8 leading-relaxed max-w-xs">
-                Refined loft residences in the heart of Honolulu—where design, lifestyle, and convenience come together.
-              </p>
-
-              {/* Centered Golden See If I Qualify Button */}
-              <Link
-                href="#screener-section"
-                className="w-full max-w-[280px] py-4 rounded-xl bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-center transition-all tracking-wide text-sm shadow-md focus:outline-none"
-              >
-                See If I Qualify
-              </Link>
-            </div>
-          </div>
-
-        </div>
-
-        {/* Floating Address Badge in Bottom Right */}
-        <div className="absolute bottom-6 right-6 hidden md:flex items-center gap-2 px-4 py-2 bg-black/45 backdrop-blur-md border border-white/10 rounded-full text-white text-xs z-20">
-          <MapPin className="w-3.5 h-3.5 text-[#dcae76]" />
-          <span className="font-medium">765 Amana Street, Honolulu, HI 96814</span>
-        </div>
-      </section>
-
-      {/* Modern Living Section */}
-      <section className="py-24 bg-[#f4f0ea] border-t border-b border-neutral-sand/15">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center">
-          
-          {/* Logo & Header */}
-          <div className="flex flex-col items-center text-center mb-16 animate-fade-in">
-            {/* Gold double peaks logo */}
-            <svg className="w-12 h-12 text-[#cda26b] mb-4" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="3.5">
-              <path d="M20 80 L50 20 L80 80" strokeLinecap="round" strokeLinejoin="round" />
-              <path d="M35 80 L50 45 L65 80" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-            
-            {/* Logo Text */}
-            <span className="text-xl font-sans font-light tracking-[0.25em] text-charcoal-dark uppercase leading-none">
-              AMANA
-            </span>
-            <div className="flex items-center justify-center gap-2 mt-2.5 mb-6 text-[10px] font-semibold text-[#cda26b] tracking-[0.4em] uppercase">
-              <span className="w-6 h-[1px] bg-[#cda26b]/40" />
-              LOFTS
-              <span className="w-6 h-[1px] bg-[#cda26b]/40" />
-            </div>
-            
-            {/* Elegant Title */}
-            <h2 className="text-4xl sm:text-5xl font-serif font-light text-charcoal-dark tracking-wide leading-tight">
-              Modern Living. Elevated.
-            </h2>
-          </div>
-
-          {/* 4 Image Columns */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-full mb-16">
-            {[
-              { img: "/images/1.jpg", title: "High Ceilings", subtitle: "Open Feeling" },
-              { img: "/images/2.jpg", title: "Ala Moana", subtitle: "Location" },
-              { img: "/images/3.jpg", title: "Modern Everyday", subtitle: "Convenience" },
-              { img: "/images/4.jpg", title: "Studio, 1 & 2 Bedroom", subtitle: "Options" }
-            ].map((col, idx) => (
-              <div key={idx} className="flex flex-col items-center group">
-                <div className="relative w-full aspect-[692/880] rounded-[24px] overflow-hidden shadow-md mb-5 bg-neutral-sand/25">
-                  <Image 
-                    src={col.img} 
-                    alt={col.title}
-                    fill
-                    className="object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                </div>
-                <h3 className="text-lg font-sans font-semibold text-charcoal-dark uppercase tracking-wider text-center mb-1.5">
-                  {col.title}
-                </h3>
-                <span className="text-xs sm:text-sm font-sans text-charcoal-muted uppercase tracking-widest text-center">
-                  {col.subtitle}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Centered See If I Qualify Button */}
-          <Link
-            href="#screener-section"
-            className="px-14 py-4.5 rounded-sm bg-[#dcae76] hover:bg-[#cda26b] active:scale-[0.98] text-[#1c1a17] font-semibold text-center transition-all tracking-wider text-sm shadow-md focus:outline-none"
-          >
-            See If I Qualify
-          </Link>
-          
-        </div>
-      </section>
-
-      {/* Layer 3: Interactive Eligibility Screener Section */}
-      <section id="screener-section" className="relative py-24 bg-cover bg-center overflow-hidden z-0" style={{ backgroundImage: "url('/images/back.jpg')" }}>
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/65 z-10 pointer-events-none" />
-
-        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-between h-full min-h-[90vh]">
-          {/* Header Bar inside Section */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 border-b border-white/10 pb-6 mb-8">
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col justify-between flex-1">
+          {/* Unified Global Header */}
+          <div className="flex justify-between items-center gap-4 border-b border-white/10 pb-6 mb-8 w-full">
             <div className="flex items-center gap-3">
-              {/* Gold double peaked logo */}
               <svg className="w-10 h-10 text-[#dcae76]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="4">
                 <path d="M20 80 L50 20 L80 80" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M35 80 L50 45 L65 80" strokeLinecap="round" strokeLinejoin="round" />
@@ -507,8 +381,8 @@ export default function HomePage() {
               </div>
             </div>
             
-            <div className="flex items-center gap-2 text-sm text-zinc-300">
-              <span>Need help?</span>
+            <div className="flex items-center gap-2 text-xs sm:text-sm text-zinc-300">
+              <span className="hidden sm:inline">Leasing Hotline:</span>
               <a href="tel:8085550147" className="font-semibold text-[#dcae76] hover:text-[#cda26b] transition-colors flex items-center gap-1.5">
                 <Phone className="w-4 h-4" />
                 (808) 555-0147
@@ -516,70 +390,41 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Step Tracker Bar (Step 1 to 4) */}
-          {step < 6 && (
-            <div className="w-full max-w-3xl mx-auto mb-12">
-              <div className="flex justify-between items-center relative">
-                {/* Horizontal progress bar backgrounds */}
-                <div className="absolute top-1/2 left-0 right-0 h-[2px] bg-white/10 -translate-y-1/2 z-0" />
-                <div 
-                  className="absolute top-1/2 left-0 h-[2px] bg-[#dcae76] -translate-y-1/2 z-0 transition-all duration-500 ease-out" 
-                  style={{ width: `${Math.min(((step - 1) / 4) * 100, 100)}%` }}
-                />
-
-                {[
-                  { label: 'Household Size', icon: Users },
-                  { label: 'Unit Type', icon: HomeIcon },
-                  { label: 'Income Range', icon: DollarSign },
-                  { label: 'Move Timing', icon: Calendar },
-                ].map((s, idx) => {
-                  const stepNum = idx + 1;
-                  const isActive = step === stepNum;
-                  const isCompleted = step > stepNum;
-                  return (
-                    <div key={idx} className="flex flex-col sm:flex-row items-center gap-2.5 z-10 bg-black/60 px-3 py-1.5 rounded-full border border-white/5">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
-                        isActive 
-                          ? 'bg-[#dcae76] text-[#1c1a17]' 
-                          : isCompleted 
-                          ? 'bg-[#dcae76]/85 text-[#1c1a17]' 
-                          : 'bg-[#1c1a17] text-zinc-400 border border-white/15'
-                      }`}>
-                        {isCompleted ? <Check className="w-4 h-4" /> : stepNum}
-                      </div>
-                      <span className={`text-xs font-medium tracking-wide hidden md:inline-block ${
-                        isActive || isCompleted ? 'text-white' : 'text-zinc-400'
-                      }`}>
-                        {s.label}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          {/* Grid Layout: Left Column Title, Right Column Card */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center flex-1">
-            {/* Left Content Column */}
-            <div className="lg:col-span-5 text-left">
-              <h2 className="font-serif font-light text-4xl sm:text-5xl text-white mb-6 leading-tight">
-                A Quick Check<br />Before the Next Step
-              </h2>
-              <div className="w-20 h-1 bg-[#dcae76] mb-8" />
-              <p className="text-zinc-300 text-base leading-relaxed mb-10 max-w-md">
-                Answer a few quick questions to help us find the right workforce housing or premium placement options for you in our Honolulu portfolio.
+          {/* Grid Layout: Left Column Hero Panel, Right Column Form Card */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center flex-1 w-full my-auto py-6">
+            {/* Left Column: Premium Brand & Video Overlay */}
+            <div className="lg:col-span-5 text-left text-white pr-4 animate-slide-up">
+              <h1 className="text-4xl sm:text-5xl font-serif font-light text-white mb-6 leading-tight tracking-wide">
+                Modern Lofts.<br />Elevated Living.
+              </h1>
+              <p className="text-zinc-300 text-sm sm:text-base leading-relaxed mb-8 max-w-sm">
+                A premier workforce affordable residential complex in the heart of Honolulu, Ala Moana. Refined layouts designed for local residents.
               </p>
-              
-              <div className="border border-white/10 bg-black/35 rounded-full px-6 py-3.5 inline-flex items-center gap-3.5 text-white text-sm shadow-md">
+              <div className="border border-white/10 bg-black/45 backdrop-blur-md rounded-xl px-5 py-3.5 inline-flex items-center gap-3 text-white text-xs sm:text-sm shadow-md max-w-xs">
                 <Shield className="w-4 h-4 text-[#dcae76]" />
-                <span className="font-medium text-zinc-200">Secure. Private. Takes 1 minute.</span>
+                <span className="font-medium text-zinc-200">Secure Eligibility Pre-Check</span>
               </div>
             </div>
 
-            {/* Right Card Column */}
+            {/* Right Column: Interactive Screener Wizard */}
             <div className="lg:col-span-7 w-full">
-              <div className="bg-[#f5f0eb] border border-neutral-sand/25 rounded-[32px] p-6 sm:p-10 shadow-2xl flex flex-col justify-between min-h-[460px] text-charcoal-dark transition-all">
+              <div className="bg-white border border-neutral-sand/20 rounded-2xl p-6 sm:p-10 shadow-2xl flex flex-col justify-between min-h-[480px] text-charcoal-dark transition-all relative">
+                
+                {/* Sleek inline progress bar */}
+                {step < 6 && (
+                  <div className="w-full mb-6">
+                    <div className="w-full h-1 bg-neutral-sand/10 rounded-full overflow-hidden mb-2">
+                      <div 
+                        className="h-full bg-[#dcae76] transition-all duration-500 ease-out" 
+                        style={{ width: `${(step / 5) * 100}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] font-semibold tracking-wider text-charcoal-muted uppercase">
+                      <span>Pre-Qualification Questionnaire</span>
+                      <span className="text-[#cda26b]">Step {step} of 5</span>
+                    </div>
+                  </div>
+                )}
                 
                 {/* Active Step Content */}
                 <div className="flex-1 flex flex-col justify-center">
