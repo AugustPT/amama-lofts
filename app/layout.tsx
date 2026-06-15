@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Link from "next/link";
-import { ClipboardCheck } from "lucide-react";
+import { ClipboardCheck, Phone } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Amana Lofts | Income-Qualified Rentals in Ala Moana Honolulu",
@@ -144,12 +144,16 @@ export default function RootLayout({
             </nav>
 
             <div className="flex items-center gap-3">
+              <a href="tel:8085550147" className="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold text-charcoal-muted hover:text-[#cda26b] transition-colors mr-2">
+                <Phone className="w-3.5 h-3.5 text-[#dcae76]" />
+                (808) 555-0147
+              </a>
               <Link href="/admin" className="text-xs text-charcoal-muted hover:text-brand-gold font-medium px-2 py-1 transition-colors">
                 Admin
               </Link>
               <Link
                 href="/#screener-section"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-sm bg-brand-gold hover:bg-brand-gold-dark text-white text-sm font-medium tracking-wide transition-all shadow-sm focus:ring-2 focus:ring-brand-gold/50 focus:outline-none"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#dcae76] hover:bg-[#cda26b] text-[#1c1a17] text-sm font-semibold tracking-wide transition-all shadow-sm focus:ring-2 focus:ring-[#dcae76]/55 focus:outline-none"
               >
                 <ClipboardCheck className="w-4 h-4" />
                 Check If I Qualify

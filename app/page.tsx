@@ -367,34 +367,15 @@ export default function HomePage() {
         {/* Soft Vignette Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/35 lg:to-black/20 z-10 pointer-events-none" />
         
-        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col justify-between flex-1">
-          {/* Unified Global Header */}
-          <div className="flex justify-between items-center gap-4 border-b border-white/10 pb-6 mb-8 w-full">
-            <div className="flex items-center gap-3">
-              <svg className="w-10 h-10 text-[#dcae76]" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="4">
-                <path d="M20 80 L50 20 L80 80" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M35 80 L50 45 L65 80" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <div>
-                <span className="text-[18px] font-sans font-light tracking-[0.2em] text-white block leading-none">AMANA</span>
-                <span className="text-[8px] font-semibold text-[#dcae76] tracking-[0.35em] block mt-1 uppercase">LOFTS</span>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2 text-xs sm:text-sm text-zinc-300">
-              <span className="hidden sm:inline">Leasing Hotline:</span>
-              <a href="tel:8085550147" className="font-semibold text-[#dcae76] hover:text-[#cda26b] transition-colors flex items-center gap-1.5">
-                <Phone className="w-4 h-4" />
-                (808) 555-0147
-              </a>
-            </div>
-          </div>
-
+        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col justify-center flex-1">
           {/* Grid Layout: Left Column Hero Panel, Right Column Form Card */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center flex-1 w-full my-auto py-6">
             {/* Left Column: Premium Brand & Video Overlay */}
             <div className="lg:col-span-5 text-left text-white pr-4 animate-slide-up">
-              <h1 className="text-4xl sm:text-5xl font-serif font-light text-white mb-6 leading-tight tracking-wide">
+              <h1 
+                className="text-4xl sm:text-5xl font-serif font-light text-white mb-6 leading-tight tracking-wide"
+                style={{ color: 'white' }}
+              >
                 Modern Lofts.<br />Elevated Living.
               </h1>
               <p className="text-zinc-300 text-sm sm:text-base leading-relaxed mb-8 max-w-sm">
